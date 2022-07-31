@@ -188,8 +188,6 @@ static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 	else
 		len = btw;
 
-
-	f_res = f_write(&fil[fileNum], rtcTimeBuff, len, &bw);
 	// Writing brokey
 	if(f_res != FR_OK){
 		return 0;
