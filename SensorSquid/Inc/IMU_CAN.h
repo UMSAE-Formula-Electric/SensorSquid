@@ -29,3 +29,7 @@ struct imuState {
 
 	float roll;		/*!< Specifies roll in degrees with high resolution. Can be between -250 and +252 */
 };
+
+void imuProcessSlopePacket(uint8_t data[]);
+void imuProcessAngularRatePacket(uint8_t data[]);
+void imuProcessAccelerationPacket(uint8_t data[]);

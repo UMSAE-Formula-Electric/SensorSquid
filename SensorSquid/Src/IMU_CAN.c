@@ -12,36 +12,8 @@
 
 
 #include "IMU_CAN.h"
-#include "stm32f4xx_hal_can.c"
-#include "stm32f4xx_hal_can.h"
 
 imuState state;
-
-void imuDecodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]){
-	if(pHeader->IDE == CAN_ID_EXT){
-		uint16_t PGN = (pHeader->ExtId >> 8) && 0x0000FFFF;
-
-		switch(PGN){
-			case 61481: //Slope Sensor
-				imuProcessSlopePacket(aData);
-				break;
-			case 61482: //Angular Rate
-				imuProcessAngularRatePacket(aData);
-				break;
-			case 61485: //Acceleration Sensor
-				imuProcessAccelerationPacket(aData);
-				break;
-/*
-			case 65386: //Magnetometer Sensor (Dont care?)
-				break;
-*/
-		}
-	}
-	else {
-		//TODO: Error handler
-	}
-}
-
 
 //TODO: Semaphore for state struct
 
@@ -72,3 +44,5 @@ void imuProcessAccelerationPacket(uint8_t data[]){
 	state.x_acceleration = (r_yAcceleration / 100) - 320;
 	state.x_acceleration = (r_zAcceleration / 100) - 320;
 }
+
+//TODO: Export to uart

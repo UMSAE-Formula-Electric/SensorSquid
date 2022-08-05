@@ -56,6 +56,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "can.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -143,6 +145,9 @@ int main(void)
   MX_CAN1_Init();
   MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
+
+  //Init HAL CAN Task
+  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
 
   /* USER CODE END 2 */
 
