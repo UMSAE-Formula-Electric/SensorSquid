@@ -64,7 +64,7 @@
 /* USER CODE BEGIN Includes */
 #include "sd_card.h"
 #include "timestamps.h"
-
+#include "wheel_speed.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -136,6 +136,7 @@ int main(void)
   MX_FATFS_Init();
   MX_RTC_Init();
   MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   Init_SD_Card();
 
@@ -240,7 +241,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
+  if(htim->Instance == TIM1)
+	  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
+
+  if(htim->Instance == TIM2)
+	  HAL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
   /* USER CODE END Callback 1 */
 }
 
