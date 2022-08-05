@@ -13,10 +13,19 @@
 #endif /* IMU_CAN_H_ */
 
 struct imuState {
-	uint8_t x_translation = 0;
-	uint8_t y_translation = 0;
-	uint8_t z_translation = 0;
-	uint8_t x_rotation = 0;
-	uint8_t y_rotation = 0;
-	uint8_t z_rotation = 0;
+	float x_acceleration;
+
+	float y_acceleration;
+
+	float z_acceleration;
+
+	float x_angular_rate;
+
+	float y_angular_rate;
+
+	float z_angular_rate;
+
+	float pitch;	/*!< Specifies pitch in degrees with high resolution. Can be between -250 and +252 */
+
+	float roll;		/*!< Specifies roll in degrees with high resolution. Can be between -250 and +252 */
 };
