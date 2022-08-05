@@ -143,6 +143,9 @@ int main(void)
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   Init_SD_RTOS_Tasks();
+  Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
+
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
 
   /* USER CODE END 2 */
 

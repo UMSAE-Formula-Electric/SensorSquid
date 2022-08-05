@@ -18,6 +18,8 @@
 #define TIM_IT_CC1_FLAG   0x02
 #define TIM_IT_CC2_FLAG   0x04
 
+#define WHEELSPEED_LOG_TASK_PRIORITY		osPriorityAboveNormal			// Ensure we're logging as realtime as we can get
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -48,10 +50,33 @@ volatile static uint32_t periodOF_BR = 0;				// How many overflows have occured 
 volatile static uint32_t periodOF_BL = 0;
 
 
+//Static Task Data
+static StackType_t xWheelSpeed_Logger_Stack[256];		// Stack for the SD_Card logger task
+static StaticTask_t xWheelSpeed_Logger_Buffer;
+static TaskHandle_t	xWheelSpeed_Logger_Handle;	//Task handle for the SD card task
+
+
 /* Private function prototypes -----------------------------------------------*/
+
+void xWheelSpeed_Logger(void* pvParameters);
+
+
 /* Private functions ---------------------------------------------------------*/
 
 
+
+void Init_WheelSpeed_Logging_Task(){
+
+	//Gatekeeper
+	xWheelSpeed_Logger_Handle = xTaskCreateStatic(	xWheelSpeed_Logger,
+														"Wheel Speed Logger",
+														512,
+														NULL,
+														WHEELSPEED_LOG_TASK_PRIORITY,
+														xWheelSpeed_Logger_Stack,
+														&xWheelSpeed_Logger_Buffer);	// Create static task for logging the wheelspeed sensor to the sdcard
+
+}
 
 
 /*get_wheel_ang_vel

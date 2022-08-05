@@ -26,6 +26,9 @@
 };
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+
+void Init_WheelSpeed_Logging_Task();
+
 float get_wheel_ang_vel(enum wheelPosition wheel);
 
 void HAL_Wheelspeed_Overflow_Callback();
