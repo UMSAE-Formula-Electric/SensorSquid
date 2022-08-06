@@ -9,7 +9,8 @@ Middlewares/Third_Party/FreeRTOS/Source/queue.o: \
  C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+ C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
+ C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 
 C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -30,3 +31,5 @@ C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/includ
 C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Middlewares/Third_Party/FreeRTOS/Source/include/task.h:

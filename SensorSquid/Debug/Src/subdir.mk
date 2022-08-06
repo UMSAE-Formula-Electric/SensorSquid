@@ -4,34 +4,64 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/adc.c \
 ../Src/bsp_driver_sd.c \
+../Src/can.c \
+../Src/dma.c \
 ../Src/fatfs.c \
+../Src/fatfs_platform.c \
 ../Src/freertos.c \
+../Src/gpio.c \
 ../Src/main.c \
+../Src/rtc.c \
+../Src/sd_card.c \
 ../Src/sd_diskio.c \
+../Src/sdio.c \
 ../Src/stm32f4xx_hal_msp.c \
+../Src/stm32f4xx_hal_timebase_tim.c \
 ../Src/stm32f4xx_it.c \
-../Src/system_stm32f4xx.c 
+../Src/system_stm32f4xx.c \
+../Src/usart.c 
 
 OBJS += \
+./Src/adc.o \
 ./Src/bsp_driver_sd.o \
+./Src/can.o \
+./Src/dma.o \
 ./Src/fatfs.o \
+./Src/fatfs_platform.o \
 ./Src/freertos.o \
+./Src/gpio.o \
 ./Src/main.o \
+./Src/rtc.o \
+./Src/sd_card.o \
 ./Src/sd_diskio.o \
+./Src/sdio.o \
 ./Src/stm32f4xx_hal_msp.o \
+./Src/stm32f4xx_hal_timebase_tim.o \
 ./Src/stm32f4xx_it.o \
-./Src/system_stm32f4xx.o 
+./Src/system_stm32f4xx.o \
+./Src/usart.o 
 
 C_DEPS += \
+./Src/adc.d \
 ./Src/bsp_driver_sd.d \
+./Src/can.d \
+./Src/dma.d \
 ./Src/fatfs.d \
+./Src/fatfs_platform.d \
 ./Src/freertos.d \
+./Src/gpio.d \
 ./Src/main.d \
+./Src/rtc.d \
+./Src/sd_card.d \
 ./Src/sd_diskio.d \
+./Src/sdio.d \
 ./Src/stm32f4xx_hal_msp.d \
+./Src/stm32f4xx_hal_timebase_tim.d \
 ./Src/stm32f4xx_it.d \
-./Src/system_stm32f4xx.d 
+./Src/system_stm32f4xx.d \
+./Src/usart.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

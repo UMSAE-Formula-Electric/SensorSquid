@@ -7,19 +7,21 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o: \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cm4.h \
- C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmInstr.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_version.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_compiler.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_gcc.h \
- C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmFunc.h \
- C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmSimd.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/mpu_armv7.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
@@ -27,8 +29,12 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o: \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -45,13 +51,13 @@ C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm3
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cm4.h:
 
-C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmInstr.h:
+C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_version.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_compiler.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/cmsis_gcc.h:
 
-C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmFunc.h:
-
-C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/core_cmSimd.h:
+C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Include/mpu_armv7.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h:
 
@@ -63,6 +69,8 @@ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h:
 
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h:
+
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
@@ -70,6 +78,8 @@ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 
@@ -85,8 +95,16 @@ C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h:
+
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
+
+C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:

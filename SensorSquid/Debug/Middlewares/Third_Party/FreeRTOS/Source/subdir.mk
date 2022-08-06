@@ -8,6 +8,7 @@ C_SRCS += \
 ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/list.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/queue.c \
+../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/timers.c 
 
@@ -16,6 +17,7 @@ OBJS += \
 ./Middlewares/Third_Party/FreeRTOS/Source/event_groups.o \
 ./Middlewares/Third_Party/FreeRTOS/Source/list.o \
 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o \
+./Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.o \
 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o \
 ./Middlewares/Third_Party/FreeRTOS/Source/timers.o 
 
@@ -24,6 +26,7 @@ C_DEPS += \
 ./Middlewares/Third_Party/FreeRTOS/Source/event_groups.d \
 ./Middlewares/Third_Party/FreeRTOS/Source/list.d \
 ./Middlewares/Third_Party/FreeRTOS/Source/queue.d \
+./Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.d \
 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.d \
 ./Middlewares/Third_Party/FreeRTOS/Source/timers.d 
 

@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Middlewares/Third_Party/FatFs/src/option/ccsbcs.c \
 ../Middlewares/Third_Party/FatFs/src/option/syscall.c 
 
 OBJS += \
+./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o \
 ./Middlewares/Third_Party/FatFs/src/option/syscall.o 
 
 C_DEPS += \
+./Middlewares/Third_Party/FatFs/src/option/ccsbcs.d \
 ./Middlewares/Third_Party/FatFs/src/option/syscall.d 
 
 
