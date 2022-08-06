@@ -222,10 +222,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
 		overflow_cnt_FL = 0;								// Reset the overflow counter.
 	}
-	if(htim->Instance == TIM4){
-		increment_flow();
-	}
-
 
 }
 
