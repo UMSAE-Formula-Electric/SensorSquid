@@ -152,11 +152,11 @@ float get_wheel_ang_vel(enum wheelPosition wheel) {
 	if(periodcurr != 0 && periodprev !=0 && overflow != 0){
 
 		if(overflow > 0){
-			speed = ((float)clkFrq) * NUM_TEETH / (float)(periodcurr + (65535 - periodprev) + ((overflow-1) * 65535));			// calculate speed
+			speed = ((float)clkFrq) / (NUM_TEETH * (float)(periodcurr + (65535 - periodprev) + ((overflow-1) * 65535)));			// calculate speed
 		}
-		else if(overflow > 0){
+		else if(overflow == 0){
 			assert_param(periodcurr - periodprev >= 0);					// ensure that this assumption holds. (If we're getting negative values, we're not counting overflows)
-			speed = ((float)clkFrq) * NUM_TEETH / (float)(periodcurr - periodprev);			// calculate speed
+			speed = ((float)clkFrq) / (NUM_TEETH * (float)(periodcurr - periodprev));			// calculate speed
 		}
 
 		//check that the division didnt give nan
@@ -222,6 +222,10 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
 		overflow_cnt_FL = 0;								// Reset the overflow counter.
 	}
+	if(htim->Instance == TIM4){
+		increment_flow();
+	}
+
 
 }
 
