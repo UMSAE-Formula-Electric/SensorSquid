@@ -92,6 +92,8 @@ void Error_Handler(void);
 #define B1_GPIO_Port GPIOC
 #define SD_Card_Detect_Pin GPIO_PIN_12
 #define SD_Card_Detect_GPIO_Port GPIOC
+
+int main();
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

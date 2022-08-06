@@ -23,7 +23,8 @@ C_SRCS += \
 ../Src/system_stm32f4xx.c \
 ../Src/tim.c \
 ../Src/timestamps.c \
-../Src/usart.c 
+../Src/usart.c \
+../Src/wheel_speed.c 
 
 OBJS += \
 ./Src/adc.o \
@@ -45,7 +46,8 @@ OBJS += \
 ./Src/system_stm32f4xx.o \
 ./Src/tim.o \
 ./Src/timestamps.o \
-./Src/usart.o 
+./Src/usart.o \
+./Src/wheel_speed.o 
 
 C_DEPS += \
 ./Src/adc.d \
@@ -67,7 +69,8 @@ C_DEPS += \
 ./Src/system_stm32f4xx.d \
 ./Src/tim.d \
 ./Src/timestamps.d \
-./Src/usart.d 
+./Src/usart.d \
+./Src/wheel_speed.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -62,7 +62,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "sd_card.h"
+
+//#include "sd_card.h"
+//#include "timestamps.h"
+//#include "wheel_speed.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -134,12 +137,27 @@ int main(void)
   MX_FATFS_Init();
   MX_RTC_Init();
   MX_TIM1_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   Init_SD_Card();
+  HAL_TIM_Base_Start_IT(&htim1);
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim3);
 
+  //Init HAL CAN Task
+  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
+
+  
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
+  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
+/* USER CODE END 2 */
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   Init_SD_RTOS_Tasks();
+  Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
+
 
   /* USER CODE END 2 */
 
@@ -229,18 +247,27 @@ void SystemClock_Config(void)
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM10) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+//{
+//  /* USER CODE BEGIN Callback 0 */
+//
+//  /* USER CODE END Callback 0 */
+//  if (htim->Instance == TIM10) {
+//    HAL_IncTick();
+//  }
+//  /* USER CODE BEGIN Callback 1 */
+//  if(htim->Instance == TIM1)
+//	  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
+//
+//  if(htim->Instance == TIM2)
+//	  HAL_FR_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+//
+//  if(htim->Instance == TIM3)
+//	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+//
+//
+//  /* USER CODE END Callback 1 */
+//}
 
 /**
   * @brief  This function is executed in case of error occurrence.

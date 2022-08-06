@@ -68,12 +68,9 @@ Src/main.o: ../Src/main.c C:/GitHub/SensorSquid/SensorSquid/Inc/main.h \
  C:/GitHub/SensorSquid/SensorSquid/Inc/sd_diskio.h \
  C:/GitHub/SensorSquid/SensorSquid/Inc/rtc.h \
  C:/GitHub/SensorSquid/SensorSquid/Inc/sdio.h \
+ C:/GitHub/SensorSquid/SensorSquid/Inc/tim.h \
  C:/GitHub/SensorSquid/SensorSquid/Inc/usart.h \
- C:/GitHub/SensorSquid/SensorSquid/Inc/gpio.h \
- C:/GitHub/SensorSquid/SensorSquid/Inc/sd_card.h \
- C:/GitHub/SensorSquid/SensorSquid/Inc/usart.h \
- C:/GitHub/SensorSquid/SensorSquid/Inc/rtc.h \
- C:/GitHub/SensorSquid/SensorSquid/Inc/fatfs.h
+ C:/GitHub/SensorSquid/SensorSquid/Inc/gpio.h
 
 C:/GitHub/SensorSquid/SensorSquid/Inc/main.h:
 
@@ -215,14 +212,8 @@ C:/GitHub/SensorSquid/SensorSquid/Inc/rtc.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Inc/sdio.h:
 
+C:/GitHub/SensorSquid/SensorSquid/Inc/tim.h:
+
 C:/GitHub/SensorSquid/SensorSquid/Inc/usart.h:
 
 C:/GitHub/SensorSquid/SensorSquid/Inc/gpio.h:
-
-C:/GitHub/SensorSquid/SensorSquid/Inc/sd_card.h:
-
-C:/GitHub/SensorSquid/SensorSquid/Inc/usart.h:
-
-C:/GitHub/SensorSquid/SensorSquid/Inc/rtc.h:
-
-C:/GitHub/SensorSquid/SensorSquid/Inc/fatfs.h:
