@@ -1,3 +1,21 @@
+/*
+ * can.h
+ *
+ *  Created on: Aug. 5, 2022
+ *      Author: Brett
+ */
+
+#ifndef CAN_H_
+#define CAN_H_
+
+#define imuSlopePGN 		61481
+#define imuAngularRatePGN 	61482
+#define imuAccelerationPGN	61485
+#define imuMagnetometerPGN	65386
+
+void hcan1_rx_readPacketsTask( void * pvParameters );
+void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -16,11 +34,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __CAN_H__
-#define __CAN_H__
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -49,4 +62,3 @@ void MX_CAN1_Init(void);
 #endif
 
 #endif /* __CAN_H__ */
-
