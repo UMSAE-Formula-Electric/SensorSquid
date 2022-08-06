@@ -59,6 +59,9 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "sd_card.h"
+#include "wheel_speed.h"
+#include "timestamps.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -247,27 +250,27 @@ void SystemClock_Config(void)
   * @param  htim : TIM handle
   * @retval None
   */
-//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-//{
-//  /* USER CODE BEGIN Callback 0 */
-//
-//  /* USER CODE END Callback 0 */
-//  if (htim->Instance == TIM10) {
-//    HAL_IncTick();
-//  }
-//  /* USER CODE BEGIN Callback 1 */
-//  if(htim->Instance == TIM1)
-//	  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
-//
-//  if(htim->Instance == TIM2)
-//	  HAL_FR_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
-//
-//  if(htim->Instance == TIM3)
-//	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
-//
-//
-//  /* USER CODE END Callback 1 */
-//}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM10) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+  if(htim->Instance == TIM1)
+	  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
+
+  if(htim->Instance == TIM2)
+	  HAL_FR_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+  if(htim->Instance == TIM3)
+	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.
