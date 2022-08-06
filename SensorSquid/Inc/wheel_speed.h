@@ -31,6 +31,7 @@ void Init_WheelSpeed_Logging_Task();
 
 float get_wheel_ang_vel(enum wheelPosition wheel);
 
-void HAL_Wheelspeed_Overflow_Callback();
+void HAL_FR_Wheelspeed_Overflow_Callback();
+void HAL_FL_Wheelspeed_Overflow_Callback();
 
 #endif

@@ -35,13 +35,28 @@
 uint32_t periodFL = 0;	//most recent period of front left
 uint32_t periodFR = 0;	//most recent period of front right
 
-volatile uint32_t periodBLprev = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
-volatile uint32_t periodBLcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
 
-volatile uint32_t periodBRprev = 0;			//most recent period of back right
-volatile uint32_t periodBRcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+volatile static uint32_t periodFLprev = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+volatile static uint32_t periodFLcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+
+volatile static uint32_t periodFRprev = 0;			//most recent period of back right
+volatile static uint32_t periodFRcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+
+volatile static uint32_t periodBLprev = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+volatile static uint32_t periodBLcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
+
+volatile static uint32_t periodBRprev = 0;			//most recent period of back right
+volatile static uint32_t periodBRcurr = 0;			//most recent period of back left 		(Maybe volatile will make it work better?)
 
 // DO NOT WRITE
+volatile static uint32_t overflow_cnt_FR = 0;			// Count the overflows of the timer on the back right ()
+volatile static uint32_t overflow_cnt_FL = 0;
+
+//
+volatile static uint32_t periodOF_FR = 0;				// How many overflows have occured since last sproket tooth
+volatile static uint32_t periodOF_FL = 0;
+
+
 volatile static uint32_t overflow_cnt_BR = 0;			// Count the overflows of the timer on the back right ()
 volatile static uint32_t overflow_cnt_BL = 0;
 
@@ -70,7 +85,7 @@ void Init_WheelSpeed_Logging_Task(){
 	//Gatekeeper
 	xWheelSpeed_Logger_Handle = xTaskCreateStatic(	xWheelSpeed_Logger,
 														"Wheel Speed Logger",
-														512,
+														1024,
 														NULL,
 														WHEELSPEED_LOG_TASK_PRIORITY,
 														xWheelSpeed_Logger_Stack,
@@ -106,10 +121,14 @@ float get_wheel_ang_vel(enum wheelPosition wheel) {
 	switch (wheel) {
 
 	case frontLeftWheel:
-		periodcurr = periodFL;
+		overflow = periodOF_FL;
+		periodcurr = periodFLcurr;
+		periodprev = periodFLprev;
 		break;
 	case frontRightWheel:
-		periodcurr = periodFR;
+		overflow = periodOF_FR;
+		periodcurr = periodFRcurr;
+		periodprev = periodFRprev;
 		break;
 	case backLeftWheel:
 		overflow = periodOF_BL;
@@ -149,27 +168,29 @@ float get_wheel_ang_vel(enum wheelPosition wheel) {
 	return speed;
 }
 
+
+
 void xWheelSpeed_Logger(void* pvParameters){
 
-	float wheelsped_bufferFL, wheelsped_bufferFR;
-	char logged_msgFR[128] =  {0};
-	char logged_msgFL[128] =  {0};
+	char logged_msgFR[256] =  {0};
+	char logged_msgFL[256] =  {0};
 
 	time_delta td;
 	float timedelt;
+	float wheelsped_bufferFL, wheelsped_bufferFR;
 
 	for(;;){
 		wheelsped_bufferFL = get_wheel_ang_vel(frontLeftWheel);
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFR, "Delta: %f, WSPD(FL): %3.4f", timedelt, wheelsped_bufferFL);
+		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelt, wheelsped_bufferFL);
 
 		wheelsped_bufferFR = get_wheel_ang_vel(frontRightWheel);
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %3.4f", timedelt, wheelsped_bufferFR);
+		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelt, wheelsped_bufferFR);
 
 		// Log both wheels
 		SD_Log(logged_msgFL, -1);
@@ -189,26 +210,33 @@ void xWheelSpeed_Logger(void* pvParameters){
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 	// Timer Channel 1, PA8 -> Rear Right Wheel
 
-	if(htim->Instance->SR & TIM_IT_CC1_FLAG){
-		periodBRprev = periodBRcurr;						// Save the old value
-		periodBRcurr = htim2.Instance->CCR1;				// Get capture compare register 1's value, CC1 flag is cleared from reading this
-		periodOF_BR = overflow_cnt_BR;						// Save the period of the overflow counter
-		overflow_cnt_BR = 0;								// Reset the overflow counter.
+	if(htim->Instance == TIM2){
+		periodFRprev = periodFRcurr;						// Save the old value
+		periodFRcurr = htim2.Instance->CCR1;				// Get capture compare register 1's value, CC1 flag is cleared from reading this
+		periodOF_FR = overflow_cnt_FR;						// Save the period of the overflow counter
+		overflow_cnt_FR = 0;								// Reset the overflow counter.
 	}
-	if(htim->Instance->SR & TIM_IT_CC2_FLAG){
-		periodBLprev = periodBLcurr;						// Save the old value
-		periodBLcurr = htim2.Instance->CCR2;					// Get capture compare register 2's value
-		periodOF_BL = overflow_cnt_BL;						// Save the period of the overflow counter
-		overflow_cnt_BL = 0;								// Reset the overflow counter.
+	if(htim->Instance == TIM3){
+		periodFLprev = periodFLcurr;						// Save the old value
+		periodFLcurr = htim3.Instance->CCR1;					// Get capture compare register 2's value
+		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
+		overflow_cnt_FL = 0;								// Reset the overflow counter.
 	}
 
 }
 
 
-//timer 3 interrupt handler
-void HAL_Wheelspeed_Overflow_Callback(void) {
+//timer 2 interrupt handler
+void HAL_FR_Wheelspeed_Overflow_Callback(void) {
 
-	overflow_cnt_BL++;										// increment the overflow
-	overflow_cnt_BR++;
-
+	overflow_cnt_FR++;
 }
+
+// Timer 3 interrupt handler
+void HAL_FL_Wheelspeed_Overflow_Callback(void) {
+
+	overflow_cnt_FL++;										// increment the overflow
+}
+
+
+

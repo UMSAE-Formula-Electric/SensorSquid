@@ -137,15 +137,21 @@ int main(void)
   MX_RTC_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   Init_SD_Card();
+  HAL_TIM_Base_Start_IT(&htim1);
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim3);
+
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
+  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   Init_SD_RTOS_Tasks();
   Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
 
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
 
   /* USER CODE END 2 */
 
@@ -248,7 +254,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  HAL_TimestampUpdate_Callback(htim);	//update the timestamp
 
   if(htim->Instance == TIM2)
-	  HAL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+	  HAL_FR_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+  if(htim->Instance == TIM3)
+	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+
   /* USER CODE END Callback 1 */
 }
 

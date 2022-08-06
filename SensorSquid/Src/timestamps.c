@@ -32,8 +32,8 @@ time_delta getTime(){
 
 	portEXIT_CRITICAL();
 
-	assert(time_delta_var_local.seconds>-1);
-	assert(time_delta_var_local.subseconds<1);
+	//assert(time_delta_var_local.seconds>-1);
+	//assert(time_delta_var_local.subseconds<1);
 
 	// Error! Timer CNT rollover during reading
 	if(	prev_time_delta.seconds == time_delta_var_local.seconds
