@@ -21,6 +21,8 @@ C_SRCS += \
 ../Src/stm32f4xx_hal_timebase_tim.c \
 ../Src/stm32f4xx_it.c \
 ../Src/system_stm32f4xx.c \
+../Src/tim.c \
+../Src/timestamps.c \
 ../Src/usart.c 
 
 OBJS += \
@@ -41,6 +43,8 @@ OBJS += \
 ./Src/stm32f4xx_hal_timebase_tim.o \
 ./Src/stm32f4xx_it.o \
 ./Src/system_stm32f4xx.o \
+./Src/tim.o \
+./Src/timestamps.o \
 ./Src/usart.o 
 
 C_DEPS += \
@@ -61,6 +65,8 @@ C_DEPS += \
 ./Src/stm32f4xx_hal_timebase_tim.d \
 ./Src/stm32f4xx_it.d \
 ./Src/system_stm32f4xx.d \
+./Src/tim.d \
+./Src/timestamps.d \
 ./Src/usart.d 
 
 
