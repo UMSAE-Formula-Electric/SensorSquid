@@ -7,17 +7,12 @@
 
 #include "can.h"
 #include "stm32f4xx_hal_can.h"
+#include "IMU_CAN.h"
 
-void hcan1_rx_readPacketsTask( void * pvParameters )
-{
-    /* The parameter value is expected to be 1 as 1 is passed in the
-    pvParameters value in the call to xTaskCreate() below.
-    */
 
-    //configASSERT( ( ( uint32_t ) pvParameters ) == 1 );
 
-    for( ;; )
-    {
+void hcan1_rx_readPacketsTask(){
+	for( ;; ){
         if(HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0){
         	uint8_t r_Data[8];
         	CAN_RxHeaderTypeDef r_Header;
@@ -53,6 +48,10 @@ void hcan1_rx_readPacketsTask( void * pvParameters )
     }
 }
 
+void init_hcan1_rx_task(){
+  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
+}
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -73,7 +72,7 @@ void hcan1_rx_readPacketsTask( void * pvParameters )
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "can.h"
+
 
 /* USER CODE BEGIN 0 */
 

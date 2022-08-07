@@ -62,6 +62,7 @@
 #include "sd_card.h"
 #include "wheel_speed.h"
 #include "timestamps.h"
+#include "IMU_CAN.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -149,10 +150,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim3);
 
-  //Init HAL CAN Task
-  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
 
-  
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
   HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
 /* USER CODE END 2 */
@@ -160,6 +158,8 @@ int main(void)
   MX_FREERTOS_Init();
   Init_SD_RTOS_Tasks();
   Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
+  init_hcan1_rx_task();								// Start Can rx task
+  init_imu_post_task();								// Start Imu Post Task
 
 
   /* USER CODE END 2 */

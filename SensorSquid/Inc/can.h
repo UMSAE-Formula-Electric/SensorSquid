@@ -46,7 +46,8 @@ extern "C" {
 
 extern CAN_HandleTypeDef hcan1;
 
-void hcan1_rx_readPacketsTask( void * pvParameters );
+void init_hcan1_rx_task();
+void hcan1_rx_readPacketsTask();
 void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
 
 /* USER CODE BEGIN Private defines */

@@ -10,6 +10,8 @@
 
 #include "stdint.h"
 
+void init_imu_post_task();
+void imuPostStateTask();
 void imuProcessSlopePacket(uint8_t data[]);
 void imuProcessAngularRatePacket(uint8_t data[]);
 void imuProcessAccelerationPacket(uint8_t data[]);
