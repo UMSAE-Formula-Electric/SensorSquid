@@ -8,7 +8,10 @@
 #include "can.h"
 #include "stm32f4xx_hal_can.h"
 #include "IMU_CAN.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
+static TaskHandle_t	hcan1_rx_taskHandle;
 
 
 void hcan1_rx_readPacketsTask(){
@@ -49,7 +52,7 @@ void hcan1_rx_readPacketsTask(){
 }
 
 void init_hcan1_rx_task(){
-  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
+  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, NULL, 3, &hcan1_rx_taskHandle);
 }
 
 /* USER CODE BEGIN Header */

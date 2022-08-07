@@ -17,6 +17,7 @@
 #include "sd_card.h"
 #include "timestamps.h"
 
+static TaskHandle_t	imuPost_taskHandle;
 
 struct imuState state;
 
@@ -77,7 +78,7 @@ void imuPostStateTask(){
 
 void init_imu_post_task(){
   //Init HAL CAN Task
-  xTaskCreate(&imuPostStateTask, "imu_post_task", 200, ( void * ) 1, 3, NULL);
+  xTaskCreate(&imuPostStateTask, "imu_post_task", 200, NULL, 3, &imuPost_taskHandle);
 }
 
 //TODO: Export to uart

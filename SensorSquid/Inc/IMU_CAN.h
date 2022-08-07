@@ -8,7 +8,8 @@
 #ifndef IMU_CAN_H_
 #define IMU_CAN_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include "FreeRTOS.h"
 
 void init_imu_post_task();
 void imuPostStateTask();

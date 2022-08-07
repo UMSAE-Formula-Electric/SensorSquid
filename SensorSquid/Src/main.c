@@ -160,6 +160,7 @@ int main(void)
   Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
   init_hcan1_rx_task();								// Start Can rx task
   init_imu_post_task();								// Start Imu Post Task
+  init_flowRate_post_task();						// Start flow rate post task
 
 
   /* USER CODE END 2 */
@@ -267,6 +268,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if(htim->Instance == TIM3)
 	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+  if(htim->Instance == TIM4)
+	  HAL_Flow_Meter_Callback();					// update flow meter
+
 
 
   /* USER CODE END Callback 1 */
