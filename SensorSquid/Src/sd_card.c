@@ -196,6 +196,8 @@ static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 	f_res = f_write(&fil[fileNum], str, len, &bw);							// Write to SD buffer
 	f_res = f_write(&fil[fileNum], newLine, SD_LOG_MSG_SPACING, &bw);		// write to SD buffer
 
+	f_sync(&fil[fileNum]);
+
 	// Writing brokey
 	if(f_res != FR_OK){
 		return 0;

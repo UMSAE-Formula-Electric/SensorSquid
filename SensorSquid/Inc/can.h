@@ -13,8 +13,7 @@
 #define imuAccelerationPGN	61485
 #define imuMagnetometerPGN	65386
 
-void hcan1_rx_readPacketsTask( void * pvParameters );
-void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
+#include <stdint.h>
 
 /* USER CODE BEGIN Header */
 /**
@@ -46,6 +45,10 @@ extern "C" {
 /* USER CODE END Includes */
 
 extern CAN_HandleTypeDef hcan1;
+
+void init_hcan1_rx_task();
+void hcan1_rx_readPacketsTask();
+void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
 
 /* USER CODE BEGIN Private defines */
 
