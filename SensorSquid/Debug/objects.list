@@ -37,10 +37,7 @@
 "./Middlewares/Third_Party/FreeRTOS/Source/timers.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o"
-<<<<<<< HEAD
-=======
 "./Src/IMU_CAN.o"
->>>>>>> temp
 "./Src/adc.o"
 "./Src/bsp_driver_sd.o"
 "./Src/can.o"
@@ -58,13 +55,9 @@
 "./Src/stm32f4xx_hal_timebase_tim.o"
 "./Src/stm32f4xx_it.o"
 "./Src/system_stm32f4xx.o"
-<<<<<<< HEAD
-"./Src/usart.o"
-=======
 "./Src/thermistor.o"
 "./Src/tim.o"
 "./Src/timestamps.o"
 "./Src/usart.o"
 "./Src/wheel_speed.o"
->>>>>>> temp
 "./startup/startup_stm32f446xx.o"

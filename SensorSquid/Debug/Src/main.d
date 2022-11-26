@@ -59,15 +59,10 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../Inc/sd_diskio.h \
-<<<<<<< HEAD
- ../Inc/rtc.h ../Inc/sdio.h ../Inc/usart.h ../Inc/gpio.h ../Inc/sd_card.h \
- ../Inc/usart.h ../Inc/rtc.h ../Inc/fatfs.h
-=======
  ../Inc/rtc.h ../Inc/sdio.h ../Inc/tim.h ../Inc/usart.h ../Inc/gpio.h \
  ../Inc/sd_card.h ../Inc/usart.h ../Inc/rtc.h ../Inc/fatfs.h \
  ../Inc/wheel_speed.h ../Inc/tim.h ../Inc/timestamps.h ../Inc/sd_card.h \
  ../Inc/timestamps.h ../Inc/IMU_CAN.h ../Inc/thermistor.h ../Inc/adc.h
->>>>>>> temp
 ../Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Inc/stm32f4xx_hal_conf.h:
@@ -138,18 +133,13 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 ../Inc/sd_diskio.h:
 ../Inc/rtc.h:
 ../Inc/sdio.h:
-<<<<<<< HEAD
-=======
 ../Inc/tim.h:
->>>>>>> temp
 ../Inc/usart.h:
 ../Inc/gpio.h:
 ../Inc/sd_card.h:
 ../Inc/usart.h:
 ../Inc/rtc.h:
 ../Inc/fatfs.h:
-<<<<<<< HEAD
-=======
 ../Inc/wheel_speed.h:
 ../Inc/tim.h:
 ../Inc/timestamps.h:
@@ -158,4 +148,3 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 ../Inc/IMU_CAN.h:
 ../Inc/thermistor.h:
 ../Inc/adc.h:
->>>>>>> temp
