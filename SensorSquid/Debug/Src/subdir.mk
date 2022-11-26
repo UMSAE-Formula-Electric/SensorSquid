@@ -5,6 +5,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/IMU_CAN.c \
 ../Src/adc.c \
 ../Src/bsp_driver_sd.c \
 ../Src/can.c \
@@ -29,6 +30,7 @@ C_SRCS += \
 ../Src/wheel_speed.c 
 
 OBJS += \
+./Src/IMU_CAN.o \
 ./Src/adc.o \
 ./Src/bsp_driver_sd.o \
 ./Src/can.o \
@@ -53,6 +55,7 @@ OBJS += \
 ./Src/wheel_speed.o 
 
 C_DEPS += \
+./Src/IMU_CAN.d \
 ./Src/adc.d \
 ./Src/bsp_driver_sd.d \
 ./Src/can.d \
@@ -84,7 +87,7 @@ Src/%.o Src/%.su: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/bsp_driver_sd.d ./Src/bsp_driver_sd.o ./Src/bsp_driver_sd.su ./Src/can.d ./Src/can.o ./Src/can.su ./Src/dma.d ./Src/dma.o ./Src/dma.su ./Src/fatfs.d ./Src/fatfs.o ./Src/fatfs.su ./Src/fatfs_platform.d ./Src/fatfs_platform.o ./Src/fatfs_platform.su ./Src/freertos.d ./Src/freertos.o ./Src/freertos.su ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/main.d ./Src/main.o ./Src/main.su ./Src/rtc.d ./Src/rtc.o ./Src/rtc.su ./Src/sd_card.d ./Src/sd_card.o ./Src/sd_card.su ./Src/sd_diskio.d ./Src/sd_diskio.o ./Src/sd_diskio.su ./Src/sdio.d ./Src/sdio.o ./Src/sdio.su ./Src/stm32f4xx_hal_msp.d ./Src/stm32f4xx_hal_msp.o ./Src/stm32f4xx_hal_msp.su ./Src/stm32f4xx_hal_timebase_tim.d ./Src/stm32f4xx_hal_timebase_tim.o ./Src/stm32f4xx_hal_timebase_tim.su ./Src/stm32f4xx_it.d ./Src/stm32f4xx_it.o ./Src/stm32f4xx_it.su ./Src/system_stm32f4xx.d ./Src/system_stm32f4xx.o ./Src/system_stm32f4xx.su ./Src/thermistor.d ./Src/thermistor.o ./Src/thermistor.su ./Src/tim.d ./Src/tim.o ./Src/tim.su ./Src/timestamps.d ./Src/timestamps.o ./Src/timestamps.su ./Src/usart.d ./Src/usart.o ./Src/usart.su ./Src/wheel_speed.d ./Src/wheel_speed.o ./Src/wheel_speed.su
+	-$(RM) ./Src/IMU_CAN.d ./Src/IMU_CAN.o ./Src/IMU_CAN.su ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/bsp_driver_sd.d ./Src/bsp_driver_sd.o ./Src/bsp_driver_sd.su ./Src/can.d ./Src/can.o ./Src/can.su ./Src/dma.d ./Src/dma.o ./Src/dma.su ./Src/fatfs.d ./Src/fatfs.o ./Src/fatfs.su ./Src/fatfs_platform.d ./Src/fatfs_platform.o ./Src/fatfs_platform.su ./Src/freertos.d ./Src/freertos.o ./Src/freertos.su ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/main.d ./Src/main.o ./Src/main.su ./Src/rtc.d ./Src/rtc.o ./Src/rtc.su ./Src/sd_card.d ./Src/sd_card.o ./Src/sd_card.su ./Src/sd_diskio.d ./Src/sd_diskio.o ./Src/sd_diskio.su ./Src/sdio.d ./Src/sdio.o ./Src/sdio.su ./Src/stm32f4xx_hal_msp.d ./Src/stm32f4xx_hal_msp.o ./Src/stm32f4xx_hal_msp.su ./Src/stm32f4xx_hal_timebase_tim.d ./Src/stm32f4xx_hal_timebase_tim.o ./Src/stm32f4xx_hal_timebase_tim.su ./Src/stm32f4xx_it.d ./Src/stm32f4xx_it.o ./Src/stm32f4xx_it.su ./Src/system_stm32f4xx.d ./Src/system_stm32f4xx.o ./Src/system_stm32f4xx.su ./Src/thermistor.d ./Src/thermistor.o ./Src/thermistor.su ./Src/tim.d ./Src/tim.o ./Src/tim.su ./Src/timestamps.d ./Src/timestamps.o ./Src/timestamps.su ./Src/usart.d ./Src/usart.o ./Src/usart.su ./Src/wheel_speed.d ./Src/wheel_speed.o ./Src/wheel_speed.su
 
 .PHONY: clean-Src
 

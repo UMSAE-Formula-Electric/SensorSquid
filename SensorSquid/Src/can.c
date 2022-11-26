@@ -9,8 +9,6 @@
 #include "stm32f4xx_hal_can.h"
 #include "IMU_CAN.h"
 
-
-
 void hcan1_rx_readPacketsTask(){
 	for( ;; ){
         if(HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0){

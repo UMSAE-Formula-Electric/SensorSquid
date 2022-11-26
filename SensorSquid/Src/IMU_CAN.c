@@ -72,12 +72,13 @@ void imuPostStateTask(){
 						state.x_angular_rate, state.y_angular_rate, state.z_angular_rate);
 
 		SD_Log(msg, -1);
+		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 }
 
 void init_imu_post_task(){
   //Init HAL CAN Task
-  xTaskCreate(&imuPostStateTask, "imu_post_task", 200, ( void * ) 1, 3, NULL);
+  xTaskCreate(&imuPostStateTask, "imu_post_task", 512, ( void * ) 1, 3, NULL);
 }
 
 //TODO: Export to uart

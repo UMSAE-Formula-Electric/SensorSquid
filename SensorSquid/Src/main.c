@@ -63,6 +63,7 @@
 #include "wheel_speed.h"
 #include "timestamps.h"
 #include "IMU_CAN.h"
+#include "thermistor.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -160,6 +161,7 @@ int main(void)
   Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
   init_hcan1_rx_task();								// Start Can rx task
   init_imu_post_task();								// Start Imu Post Task
+  init_readTemp_task();								// Start reading the temperatures from the thermistors
 
 
   /* USER CODE END 2 */
