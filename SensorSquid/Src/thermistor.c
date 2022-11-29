@@ -29,6 +29,7 @@ double volatile naturalLogR;
 double volatile temperature;
 double volatile R_NTC;
 volatile int newData = 0;
+extern volatile int newData_dist;
 
 void get_NTC_Resistance(double voltageReading){
 	if (voltageReading >= (vDD-0.1) || voltageReading <= 0){R_NTC = 0;}
@@ -48,6 +49,7 @@ double getTemperature(double voltageReading){		// USING STEINHART & HART EQUATIO
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	newData = 1;
+	newData_dist = 1;
 }
 
 void readTemp_task(){
