@@ -150,9 +150,10 @@ int main(void)
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
-  Init_SD_RTOS_Tasks();
+
   Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
 
+  Init_SD_RTOS_Tasks();
 
   /* USER CODE END 2 */
 

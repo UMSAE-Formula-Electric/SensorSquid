@@ -15,6 +15,13 @@
 #include "sd_card.h"
 
 /* Exported types ------------------------------------------------------------*/
+
+struct WheelSpeed {
+	float METERS_PER_SECOND;
+	float KILOMETERS_PER_HOUR;
+	float RADIANS_PER_SECOND;
+};
+
 /* Exported constants --------------------------------------------------------*/
 
 //enumerated type for indicating which wheel we are reffering too
@@ -25,11 +32,17 @@
 	backRightWheel
 };
 /* Exported macro ------------------------------------------------------------*/
+
+
+
 /* Exported functions ------------------------------------------------------- */
 
 void Init_WheelSpeed_Logging_Task();
 
-float get_wheel_ang_vel(enum wheelPosition wheel);
+// Gets the required prescalar for accurate wheel speed readings
+int get_wheel_speed_timer_prescaler();
+
+struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel);
 
 void HAL_FR_Wheelspeed_Overflow_Callback();
 void HAL_FL_Wheelspeed_Overflow_Callback();

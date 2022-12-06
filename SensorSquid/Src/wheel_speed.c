@@ -18,15 +18,26 @@
 #define TIM_IT_CC1_FLAG   0x02
 #define TIM_IT_CC2_FLAG   0x04
 
-#define WHEELSPEED_LOG_TASK_PRIORITY		osPriorityAboveNormal			// Ensure we're logging as realtime as we can get
+#define WHEELSPEED_LOG_TASK_PRIORITY		osPriorityRealtime			// Ensure we're logging as realtime as we can get
 
 
 /* Private typedef -----------------------------------------------------------*/
+
 /* Private define ------------------------------------------------------------*/
 #define NUMPERIODS 4	//number of periods to average over
 #define NumCaptureVals (NUMPERIODS+1)	//number of input capture values to save
-#define NUM_TEETH 		10				// Number of teeth on the sproket which we count for a full rotation of the wheel
-#define WHEEL_DIAMETER	0.41			// In meters
+
+#define WHEEL_DIAMETER	1			// In meters
+#define WHEEL_CIRCUMFERENCE (WHEEL_DIAMETER * 3.14159)	// In meters
+
+#define NUM_TEETH  10				// Number of teeth on the sproket which we count for a full rotation of the wheel
+#define TEETH_DIST (WHEEL_CIRCUMFERENCE / NUM_TEETH)	// The distance between each tooth
+
+#define ACCURATE_SPEED 1				// In Meter / S, the speed at which we want the number of ticks per tooth [TICKS_PER_TOOTH] vvv
+#define TICKS_PER_TOOTH 100				// In ticks / tooth, how level of precision you want at the speed of [ACCURATE_SPEED] ^^^
+
+#define TICKS_PER_ROTATION (TICKS_PER_TOOTH * NUM_TEETH * ACCURATE_SPEED)		// How many ticks there are for each full revolution of the wheel at [ACCURATE_SPEED]
+#define TICKS_PER_METER (TICKS_PER_ROTATION * WHEEL_CIRCUMFERENCE)	// How many ticks there are for each meter traveled
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -76,12 +87,11 @@ static TaskHandle_t	xWheelSpeed_Logger_Handle;	//Task handle for the SD card tas
 void xWheelSpeed_Logger(void* pvParameters);
 
 
+int temp_CLOCK_RATE = 0;
+
 /* Private functions ---------------------------------------------------------*/
-
-
-
 void Init_WheelSpeed_Logging_Task(){
-
+	temp_CLOCK_RATE = HAL_RCC_GetSysClockFreq();
 	//Gatekeeper
 	xWheelSpeed_Logger_Handle = xTaskCreateStatic(	xWheelSpeed_Logger,
 														"Wheel Speed Logger",
@@ -94,78 +104,94 @@ void Init_WheelSpeed_Logging_Task(){
 }
 
 
+/*
+ * @Brief Creates a wheel speed struct, so conversions are handled automatically
+ *
+ */
+const struct WheelSpeed create_wheel_speed(const float METERS_PER_SECOND) {
+	struct WheelSpeed speed;
+
+	speed.METERS_PER_SECOND = METERS_PER_SECOND;
+	speed.KILOMETERS_PER_HOUR = METERS_PER_SECOND * 3.6;
+	speed.RADIANS_PER_SECOND = 6.2832 * (METERS_PER_SECOND / WHEEL_CIRCUMFERENCE);
+
+	return speed;
+}
+
+/*get_wheel_speed_timer_prescaler
+ *
+ * @Brief Gets the required prescalar for accurate wheel speed readings
+*/
+int get_wheel_speed_timer_prescaler() {
+	const int GOAL = TICKS_PER_METER;
+	const uint32_t CLOCK_RATE = HAL_RCC_GetSysClockFreq();
+	const int PRESCALER = CLOCK_RATE / GOAL;
+
+	return 1000;
+}
+
+
 /*get_wheel_ang_vel
  *
  * 		@Brief returns the param wheel's speed in revolutions per second
  *
  */
-float get_wheel_ang_vel(enum wheelPosition wheel) {
+const struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel) {
 #ifdef ACB
 	assert_param((wheel == backLeftWheel) || (wheel == backRightWheel));			// ensure that we do not call for wheels the board is not configured for
 #else
 	assert_param((wheel == frontLeftWheel) || (wheel == frontRightWheel));
 #endif
-
-	float clkFrq = 0; 											//Frequency of timer peripheral clock
-	float speed = 0;												//the wheel speed
-
 	//wheel specific
 	uint32_t periodcurr = 0;
 	uint32_t periodprev = 0;
-
 	uint32_t overflow = 0;
 
-	uint32_t sys_clk = 0;
+	const int OVERFLOW_NUMBER = 65535;
 
 	//get wheel specific data buffer
 	switch (wheel) {
+		case frontLeftWheel:
+			overflow = periodOF_FL;
+			periodcurr = periodFLcurr;
+			periodprev = periodFLprev;
+			break;
+		case frontRightWheel:
+			overflow = periodOF_FR;
+			periodcurr = periodFRcurr;
+			periodprev = periodFRprev;
+			break;
+		case backLeftWheel:
+			overflow = periodOF_BL;
+			periodcurr = periodBLcurr;
+			periodprev = periodBLprev;
+			break;
 
-	case frontLeftWheel:
-		overflow = periodOF_FL;
-		periodcurr = periodFLcurr;
-		periodprev = periodFLprev;
-		break;
-	case frontRightWheel:
-		overflow = periodOF_FR;
-		periodcurr = periodFRcurr;
-		periodprev = periodFRprev;
-		break;
-	case backLeftWheel:
-		overflow = periodOF_BL;
-		periodcurr = periodBLcurr;
-		periodprev = periodBLprev;
-		break;
-
-	case backRightWheel:
-		overflow = periodOF_BR;
-		periodcurr = periodBRcurr;
-		periodprev = periodBRprev;
-		break;
+		case backRightWheel:
+			overflow = periodOF_BR;
+			periodcurr = periodBRcurr;
+			periodprev = periodBRprev;
+			break;
 	}
 
-	//get clock frequency
-	sys_clk = HAL_RCC_GetSysClockFreq();
-
-	//get wheel speed
-	clkFrq =  (float)sys_clk/55;						// Timer peripheral frequency
-
-	if(periodcurr != 0 && periodprev !=0 && overflow != 0){
-
-		if(overflow > 0){
-			speed = ((float)clkFrq) / (NUM_TEETH * (float)(periodcurr + (65535 - periodprev) + ((overflow-1) * 65535)));			// calculate speed
-		}
-		else if(overflow == 0){
-			assert_param(periodcurr - periodprev >= 0);					// ensure that this assumption holds. (If we're getting negative values, we're not counting overflows)
-			speed = ((float)clkFrq) / (NUM_TEETH * (float)(periodcurr - periodprev));			// calculate speed
-		}
-
-		//check that the division didnt give nan
-		if (isnan(speed))
-			speed = 0;
-
+	//Accounts for the overflow
+	if (overflow > 0) {
+		periodcurr += OVERFLOW_NUMBER * overflow;
 	}
 
-	return speed;
+	const uint32_t TICKS_PER_SECOND = temp_CLOCK_RATE / (2 * get_wheel_speed_timer_prescaler());
+
+	// The amount of ticks between each tooth
+	int tick_difference = (periodcurr - periodprev);
+	if (tick_difference == 0) {
+		tick_difference = 1;
+	}
+
+	// Calculates how much time in seconds it has been between the last rising edge
+	const float TIME_BETWEEN_TEETH = tick_difference / (float)TICKS_PER_SECOND;
+	const float SPEED = TEETH_DIST / TIME_BETWEEN_TEETH;
+
+	return create_wheel_speed(SPEED);
 }
 
 
@@ -177,20 +203,24 @@ void xWheelSpeed_Logger(void* pvParameters){
 
 	time_delta td;
 	float timedelt;
-	float wheelsped_bufferFL, wheelsped_bufferFR;
+	//float wheelsped_bufferFL, wheelsped_bufferFR;
+
+	struct WheelSpeed front_left;
+	struct WheelSpeed front_right;
 
 	for(;;){
-		wheelsped_bufferFL = get_wheel_ang_vel(frontLeftWheel);
+
+		front_left = get_wheel_ang_vel(frontLeftWheel);
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelt, wheelsped_bufferFL);
+		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelt, front_left.METERS_PER_SECOND);
 
-		wheelsped_bufferFR = get_wheel_ang_vel(frontRightWheel);
+		//front_right = get_wheel_ang_vel(frontRightWheel);
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelt, wheelsped_bufferFR);
+		//sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelt, front_right.METERS_PER_SECOND);
 
 		// Log both wheels
 		SD_Log(logged_msgFL, -1);
@@ -216,25 +246,23 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		periodOF_FR = overflow_cnt_FR;						// Save the period of the overflow counter
 		overflow_cnt_FR = 0;								// Reset the overflow counter.
 	}
+
 	if(htim->Instance == TIM3){
 		periodFLprev = periodFLcurr;						// Save the old value
 		periodFLcurr = htim3.Instance->CCR1;					// Get capture compare register 2's value
 		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
 		overflow_cnt_FL = 0;								// Reset the overflow counter.
 	}
-
 }
 
 
 //timer 2 interrupt handler
 void HAL_FR_Wheelspeed_Overflow_Callback(void) {
-
 	overflow_cnt_FR++;
 }
 
 // Timer 3 interrupt handler
 void HAL_FL_Wheelspeed_Overflow_Callback(void) {
-
 	overflow_cnt_FL++;										// increment the overflow
 }
 

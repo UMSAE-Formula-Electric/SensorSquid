@@ -1,0 +1,2 @@
+../Src/timestamps.c:23:12:getTime	24	static
+../Src/timestamps.c:52:6:HAL_TimestampUpdate_Callback	4	static

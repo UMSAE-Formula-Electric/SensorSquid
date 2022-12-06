@@ -54,5 +54,8 @@
 "./Src/stm32f4xx_hal_timebase_tim.o"
 "./Src/stm32f4xx_it.o"
 "./Src/system_stm32f4xx.o"
+"./Src/tim.o"
+"./Src/timestamps.o"
 "./Src/usart.o"
+"./Src/wheel_speed.o"
 "./startup/startup_stm32f446xx.o"
