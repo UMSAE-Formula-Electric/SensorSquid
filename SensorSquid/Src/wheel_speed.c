@@ -207,23 +207,23 @@ void xWheelSpeed_Logger(void* pvParameters){
  *
  * @brief interrupt on rising edge of wheel speed pins. Puts most recently captred value in circular buffer
  */
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-	// Timer Channel 1, PA8 -> Rear Right Wheel
-
-	if(htim->Instance == TIM2){
-		periodFRprev = periodFRcurr;						// Save the old value
-		periodFRcurr = htim2.Instance->CCR1;				// Get capture compare register 1's value, CC1 flag is cleared from reading this
-		periodOF_FR = overflow_cnt_FR;						// Save the period of the overflow counter
-		overflow_cnt_FR = 0;								// Reset the overflow counter.
-	}
-	if(htim->Instance == TIM3){
-		periodFLprev = periodFLcurr;						// Save the old value
-		periodFLcurr = htim3.Instance->CCR1;					// Get capture compare register 2's value
-		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
-		overflow_cnt_FL = 0;								// Reset the overflow counter.
-	}
-
-}
+//void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+//	// Timer Channel 1, PA8 -> Rear Right Wheel
+//
+//	if(htim->Instance == TIM2){
+//		periodFRprev = periodFRcurr;						// Save the old value
+//		periodFRcurr = htim2.Instance->CCR1;				// Get capture compare register 1's value, CC1 flag is cleared from reading this
+//		periodOF_FR = overflow_cnt_FR;						// Save the period of the overflow counter
+//		overflow_cnt_FR = 0;								// Reset the overflow counter.
+//	}
+//	if(htim->Instance == TIM3){
+//		periodFLprev = periodFLcurr;						// Save the old value
+//		periodFLcurr = htim3.Instance->CCR1;					// Get capture compare register 2's value
+//		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
+//		overflow_cnt_FL = 0;								// Reset the overflow counter.
+//	}
+//
+//}
 
 
 //timer 2 interrupt handler
