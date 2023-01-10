@@ -59,11 +59,6 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "sd_card.h"
-//#include "wheel_speed.h"
-//#include "timestamps.h"
-//#include "IMU_CAN.h"
-//#include "thermistor.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -148,6 +143,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
+  MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
   Init_SD_Card();
   HAL_TIM_Base_Start_IT(&htim1);
@@ -159,7 +155,8 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
   HAL_TIM_IC_Start_IT(&htim12, TIM_CHANNEL_1); 		// Start input capture
 
-/* USER CODE END 2 */
+  /* USER CODE END 2 */
+
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   Init_SD_RTOS_Tasks();
@@ -168,12 +165,6 @@ int main(void)
   init_imu_post_task();								// Start Imu Post Task
   init_readTemp_task();								// Start reading the temperatures from the thermistors
   init_getFlowrate_task();							// Start reading flowrate from flowmeters
-
-
-  /* USER CODE END 2 */
-
-  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
 
   /* Start scheduler */
   osKernelStart();

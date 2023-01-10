@@ -1,15 +1,17 @@
 #include "flowmeter.h"
 
-static int pulse_count = 0;
-const int PPL = 2200;
-static const int conversionFactor = 60*1000; //convert L/ms to L/min
-const TickType_t xDelay = 10 / portTICK_PERIOD_MS;	//delay 10ms
+volatile int pulse_count = 0;
+const int PPL = 2200;	//pulse per liter
+const int DELAY = 500;	//in ms
+static const double conversionFactor = (1000/DELAY)*(1.0/1000.0); //convert L/s to m^3/s
+
 
 //might need to make atomic
-float calculateFlowrate(){
-	float flowrate;
+//gets flowrate as m^3/s
+double calculateFlowrate(){
+	volatile double flowrate;
 
-	flowrate = pulse_count/10.0*conversionFactor;
+	flowrate = pulse_count*conversionFactor/PPL;
 	pulse_count = 0;
 
 	return flowrate;
@@ -18,7 +20,7 @@ float calculateFlowrate(){
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	uint32_t ICValue;
-	if(htim->Instance == TIM12 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+	if(htim->Instance == TIM12)
 	{
 		ICValue = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 
@@ -31,10 +33,10 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 }
 
 void getFlowrate_task(){
-	float flowrate;
+	volatile double flowrate;
 
 	for (;;){
-		vTaskDelay(xDelay);
+		vTaskDelay(pdMS_TO_TICKS(DELAY));
 
 		flowrate = calculateFlowrate();
 	}

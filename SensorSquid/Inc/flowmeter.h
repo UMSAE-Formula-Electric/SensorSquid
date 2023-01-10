@@ -1,5 +1,4 @@
 #include "tim.h"
-#include "timestamps.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -9,7 +8,7 @@
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 void getFlowrate_task();
-float calculateFlowrate();
+double calculateFlowrate();
 void init_getFlowrate_task();
 
 
