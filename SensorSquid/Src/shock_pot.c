@@ -1,24 +1,37 @@
+//********************************************************************
+//
+//	@file 		flowmeter.c
+//	@author 	Matthew Mora
+//	@created	Nov 19, 2022
+//	@brief		Calculates flowrate from flowmeters
+//
+//	@datasheet	https://drive.google.com/file/d/1g9wjH6BT5--y21_IYlu2G4MbX3KbiAo5/view?usp=share_link
+//
+//*********************************************************************
+
 #include "shock_pot.h"
-//#include "math.h"
 #include "stdio.h"
 #include "adc.h"
 #include "sd_card.h"
 #include <stdio.h>
 #include <string.h>
 
+// variables defined in thermistor.c
 extern uint32_t res[16];
-
 extern const double ADC_TO_Voltage;
 extern const float vDD;
-const float MAX_DIST = 50;
-volatile int newData_dist;
-double volatile dist[16];
+
+const float MAX_DIST = 50;	// max travel of shock potentiometer in mm
+volatile int newData_dist;	//
+volatile double dist[16];	// holds
 
 double getDistance(double voltage){
 	double dist = MAX_DIST * voltage / vDD;
 	return dist;
 }
 
+
+// callback entered after ADC conversion (in thermistor.c)
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 //{
 //	newData = 1;
@@ -37,6 +50,7 @@ double getDistance(double voltage){
 //	}
 //}
 
+// gets shock pot distances
 void readDist_task(){
 	char msg[512];
 	char msgDist[20];
@@ -45,26 +59,33 @@ void readDist_task(){
 
 	for (;;){
 
-		HAL_ADC_Start_DMA(&hadc1, res, 16);
-		while(!newData_dist) {}
-		newData_dist = 0;
+		HAL_ADC_Start_DMA(&hadc1, res, 16);	// get values from ADC
+		while(!newData_dist) {}				// wait until ADC finishes conversion
+		newData_dist = 0;					// reset ADC conversion flag
 
+		// calculate distances for each ADC channel
 		for(int i = 0; i < 16; i++) {
 			  voltages[i] = ADC_TO_Voltage * res[i];
 			  dist[i] = getDistance(voltages[i]);
 			  sprintf(msgDist, "ADC %d %.5f \n", i, voltages[i]);
 			  strcat(msg,msgDist);
 		}
+
+		// add ADC channel 0 to message
 		sprintf(distMsg, "Distance: %f\r\n", dist[0]);
 		HAL_UART_Transmit(&huart1, (uint8_t *) distMsg, strlen(distMsg), 10);
 
+		// log message to SD card
 		SD_Log(msg, -1);
 		memset(msg, 0, sizeof msg);
 		memset(msgDist, 0, sizeof msgDist);
+
+		// wait 10ms
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
 
+// create FreeRTOS task for reading distances
 void init_readDist_task(){
 	xTaskCreate(&readDist_task, "readDist_task", 512, ( void * ) 1, 3, NULL);
 }
