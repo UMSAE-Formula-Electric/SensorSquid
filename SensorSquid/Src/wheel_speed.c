@@ -33,7 +33,7 @@
 #define NUM_TEETH  10				// Number of teeth on the sproket which we count for a full rotation of the wheel
 #define TEETH_DIST (WHEEL_CIRCUMFERENCE / NUM_TEETH)	// The distance between each tooth
 
-#define ACCURATE_SPEED 1				// In Meter / S, the speed at which we want the number of ticks per tooth [TICKS_PER_TOOTH] vvv
+#define ACCURATE_SPEED 30				// In Meter / S, the speed at which we want the number of ticks per tooth [TICKS_PER_TOOTH] vvv
 #define TICKS_PER_TOOTH 100				// In ticks / tooth, how level of precision you want at the speed of [ACCURATE_SPEED] ^^^
 
 #define TICKS_PER_ROTATION (TICKS_PER_TOOTH * NUM_TEETH * ACCURATE_SPEED)		// How many ticks there are for each full revolution of the wheel at [ACCURATE_SPEED]
@@ -127,9 +127,19 @@ int get_wheel_speed_timer_prescaler() {
 	const uint32_t CLOCK_RATE = HAL_RCC_GetSysClockFreq();
 	const int PRESCALER = CLOCK_RATE / GOAL;
 
-	return 1000;
+	return 9000;
+	// Try Cranking this
 }
 
+
+
+int cheat = 1;
+int stored_cheat = 1;
+
+
+int amount = 10;
+int values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int indice = 0;
 
 /*get_wheel_ang_vel
  *
@@ -187,9 +197,17 @@ const struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel) {
 		tick_difference = 1;
 	}
 
+	int min_value = 10000000;
+	for (int i = 0; i < amount; i++) {
+		if (values[i] < min_value) {
+			min_value = values[i];
+		}
+	}
+	tick_difference = min_value;
+
 	// Calculates how much time in seconds it has been between the last rising edge
 	const float TIME_BETWEEN_TEETH = tick_difference / (float)TICKS_PER_SECOND;
-	const float SPEED = TEETH_DIST / TIME_BETWEEN_TEETH;
+	const float SPEED = TEETH_DIST / TIME_BETWEEN_TEETH * stored_cheat;
 
 	return create_wheel_speed(SPEED);
 }
@@ -202,23 +220,22 @@ void xWheelSpeed_Logger(void* pvParameters){
 	char logged_msgFL[256] =  {0};
 
 	time_delta td;
-	float timedelt;
+	float timedelta;
 	//float wheelsped_bufferFL, wheelsped_bufferFR;
 
 	struct WheelSpeed front_left;
 	struct WheelSpeed front_right;
 
 	for(;;){
-
 		front_left = get_wheel_ang_vel(frontLeftWheel);
 		td = getTime();
-		timedelt = (float)td.seconds + td.subseconds;
+		timedelta = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelt, front_left.METERS_PER_SECOND);
+		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelta, front_left.METERS_PER_SECOND);
 
 		//front_right = get_wheel_ang_vel(frontRightWheel);
 		td = getTime();
-		timedelt = (float)td.seconds + td.subseconds;
+		timedelta = (float)td.seconds + td.subseconds;
 
 		//sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelt, front_right.METERS_PER_SECOND);
 
@@ -232,13 +249,18 @@ void xWheelSpeed_Logger(void* pvParameters){
 
 }//xWheelSpeed_Logger
 
+int rising_edges = 0;
+
+
 
 /*HAL_TIM_IC_CaptureCallback
  *
  * @brief interrupt on rising edge of wheel speed pins. Puts most recently captred value in circular buffer
  */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+
 	// Timer Channel 1, PA8 -> Rear Right Wheel
+	__disable_irq();
 
 	if(htim->Instance == TIM2){
 		periodFRprev = periodFRcurr;						// Save the old value
@@ -247,12 +269,36 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		overflow_cnt_FR = 0;								// Reset the overflow counter.
 	}
 
+	static uint32_t time_dif = 0;
 	if(htim->Instance == TIM3){
+		volatile uint32_t curr_time = htim3.Instance->CCR1;
 		periodFLprev = periodFLcurr;						// Save the old value
-		periodFLcurr = htim3.Instance->CCR1;					// Get capture compare register 2's value
+		periodFLcurr = curr_time;				// Get capture compare register 2's value
+		time_dif = curr_time - periodFLprev;
 		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
 		overflow_cnt_FL = 0;								// Reset the overflow counter.
+
+		if (time_dif < 140) {
+			static int topic = 5;
+			int five = topic * 2;
+			cheat = 1;
+		}
+
+		values[indice] = time_dif;
+		indice += 1;
+		indice = indice % amount;
+
+		if (time_dif == 0) {
+			cheat += 1;
+		} else {
+			stored_cheat = cheat;
+			cheat = 1;
+		}
+
+		rising_edges++;
 	}
+
+	__enable_irq();
 }
 
 

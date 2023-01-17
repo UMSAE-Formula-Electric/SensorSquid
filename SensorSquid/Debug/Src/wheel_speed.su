@@ -1,8 +1,8 @@
 ../Src/wheel_speed.c:93:6:Init_WheelSpeed_Logging_Task	24	static
 ../Src/wheel_speed.c:111:25:create_wheel_speed	56	static
 ../Src/wheel_speed.c:125:5:get_wheel_speed_timer_prescaler	8	static
-../Src/wheel_speed.c:139:25:get_wheel_ang_vel	48	static
-../Src/wheel_speed.c:199:6:xWheelSpeed_Logger	592	static
-../Src/wheel_speed.c:240:6:HAL_TIM_IC_CaptureCallback	0	static
-../Src/wheel_speed.c:260:6:HAL_FR_Wheelspeed_Overflow_Callback	0	static
-../Src/wheel_speed.c:265:6:HAL_FL_Wheelspeed_Overflow_Callback	0	static
+../Src/wheel_speed.c:149:25:get_wheel_ang_vel	48	static
+../Src/wheel_speed.c:218:6:xWheelSpeed_Logger	592	static
+../Src/wheel_speed.c:261:6:HAL_TIM_IC_CaptureCallback	8	static,ignoring_inline_asm
+../Src/wheel_speed.c:307:6:HAL_FR_Wheelspeed_Overflow_Callback	0	static
+../Src/wheel_speed.c:312:6:HAL_FL_Wheelspeed_Overflow_Callback	0	static
