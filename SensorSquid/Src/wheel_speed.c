@@ -108,7 +108,7 @@ void Init_WheelSpeed_Logging_Task(){
 
 /*
  * @Brief Creates a wheel speed struct, so conversions are handled automatically
- *
+ *	Creates a WheelSpeed in M/s, Km/h & Radians/s
  */
 const struct WheelSpeed create_wheel_speed(const float METERS_PER_SECOND) {
 	struct WheelSpeed speed;
@@ -144,7 +144,7 @@ int front_right_ticks[WHEEL_SPEEDS_STORED];
 
 /*get_wheel_ang_vel
  * 	@Brief returns the param wheel's speed in the WheelSpeed struct
- *
+ * 	The WheelSpeed struct contains the speed in M/s, km/h and Radians / s
  */
 const struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel) {
 #ifdef ACB
@@ -160,6 +160,7 @@ const struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel) {
 	const int OVERFLOW_NUMBER = 65535;
 
 	int *values = 0;
+
 	//get wheel specific data buffer
 	switch (wheel) {
 		case frontLeftWheel:
@@ -196,19 +197,11 @@ const struct WheelSpeed get_wheel_ang_vel(enum wheelPosition wheel) {
 
 	const uint32_t TICKS_PER_SECOND = temp_CLOCK_RATE / (2 * get_wheel_speed_timer_prescaler());
 
-	// The amount of ticks between each tooth
+	// The amount of ticks between each tooth, must be atleast 1
 	int tick_difference = (periodcurr - periodprev);
 	if (tick_difference == 0) {
 		tick_difference = 1;
 	}
-
-	int min_value = tick_difference;
-	for (int i = 0; i < WHEEL_SPEEDS_STORED; i++) {
-		if (values[i] < min_value) {
-			min_value = values[i];
-		}
-	}
-	tick_difference = min_value;
 
 	// Calculates how much time in seconds it has been between the last rising edge
 	const float TIME_BETWEEN_TEETH = tick_difference / (float)TICKS_PER_SECOND;
@@ -226,22 +219,21 @@ void xWheelSpeed_Logger(void* pvParameters){
 
 	time_delta td;
 	float timedelta;
-	//float wheelsped_bufferFL, wheelsped_bufferFR;
 
 	struct WheelSpeed front_left;
 	struct WheelSpeed front_right;
 
 	for(;;){
+		// Logs the FL wheel speed in M/S
 		front_left = get_wheel_ang_vel(frontLeftWheel);
 		td = getTime();
 		timedelta = (float)td.seconds + td.subseconds;
-
 		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelta, front_left.METERS_PER_SECOND);
 
+		// Logs the FR wheel speed in M/S
 		front_right = get_wheel_ang_vel(frontRightWheel);
 		td = getTime();
 		timedelta = (float)td.seconds + td.subseconds;
-
 		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelta, front_right.METERS_PER_SECOND);
 
 		// Log both wheels
@@ -271,7 +263,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		periodOF_FR = overflow_cnt_FR;						// Save the period of the overflow counter
 		overflow_cnt_FR = 0;								// Reset the overflow counter.
 
-		// Stores the wheel speed
+		// Stores the wheel speed, enabling averaging & debugging purposes
 		time_dif = periodFRcurr - periodFRprev;
 		front_right_ticks[front_right_index] = time_dif;
 		front_right_index += 1;
@@ -285,7 +277,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 		periodOF_FL = overflow_cnt_FL;						// Save the period of the overflow counter
 		overflow_cnt_FL = 0;								// Reset the overflow counter.
 
-		// Stores the wheel speed
+		// Stores the wheel speed, enabling averaging & debugging purposes
 		time_dif = periodFLcurr - periodFLprev;
 		front_left_ticks[front_left_index] = time_dif;
 		front_left_index += 1;

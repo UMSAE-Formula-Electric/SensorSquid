@@ -16,6 +16,10 @@
 
 /* Exported types ------------------------------------------------------------*/
 
+/*
+* Used to get the speed of any wheel
+* Has all the values in M/s, Km/h, Radians/s automatically converted!
+*/
 struct WheelSpeed {
 	float METERS_PER_SECOND;
 	float KILOMETERS_PER_HOUR;
