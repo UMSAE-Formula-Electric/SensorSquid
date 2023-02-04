@@ -18,7 +18,7 @@
 #define TIM_IT_CC1_FLAG   0x02
 #define TIM_IT_CC2_FLAG   0x04
 
-#define WHEELSPEED_LOG_TASK_PRIORITY		osPriorityAboveNormal			// Ensure we're logging as realtime as we can get
+#define WHEELSPEED_LOG_TASK_PRIORITY		osPriorityRealtime			// Ensure we're logging as realtime as we can get
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,6 +76,7 @@ static TaskHandle_t	xWheelSpeed_Logger_Handle;	//Task handle for the SD card tas
 void xWheelSpeed_Logger(void* pvParameters);
 
 
+
 /* Private functions ---------------------------------------------------------*/
 
 
@@ -91,6 +92,7 @@ void Init_WheelSpeed_Logging_Task(){
 														xWheelSpeed_Logger_Stack,
 														&xWheelSpeed_Logger_Buffer);	// Create static task for logging the wheelspeed sensor to the sdcard
 
+int i =3;
 }
 
 
@@ -171,9 +173,9 @@ float get_wheel_ang_vel(enum wheelPosition wheel) {
 
 
 void xWheelSpeed_Logger(void* pvParameters){
-
 	char logged_msgFR[256] =  {0};
 	char logged_msgFL[256] =  {0};
+	char logged_msgCOMB[512] = {0};
 
 	time_delta td;
 	float timedelt;
@@ -184,17 +186,18 @@ void xWheelSpeed_Logger(void* pvParameters){
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f", timedelt, wheelsped_bufferFL);
+		sprintf(logged_msgFL, "Delta: %f, WSPD(FL): %f\n", timedelt, wheelsped_bufferFL); //always include \n after an entry
 
 		wheelsped_bufferFR = get_wheel_ang_vel(frontRightWheel);
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
 
-		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f", timedelt, wheelsped_bufferFR);
+		sprintf(logged_msgFR, "Delta: %f, WSPD(FR): %f\n", timedelt, wheelsped_bufferFR);//always include \n after an entry
 
-		// Log both wheels
-		SD_Log(logged_msgFL, -1);
-		SD_Log(logged_msgFR, -1);
+		sprintf(logged_msgCOMB, "%s%s",logged_msgFR, logged_msgFL); //ALWAYS make sure final output to queue is a single item
+
+		//Log the left and right wheels
+		SD_Log(logged_msgCOMB,-1);
 
 		vTaskDelay(pdMS_TO_TICKS(5));	// Log the wheel speeds every 5ms
 	}

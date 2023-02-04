@@ -67,7 +67,7 @@ void imuPostStateTask(){
 
 		td = getTime();
 		timedelt = (float)td.seconds + td.subseconds;
-		sprintf(msg, "Delta: %f, Pit: %f, Roll: %f, xAcc: %f, yAcc: %f, zAcc: %f, xAngR: %f, yAngR: %f, zAngR: %f",
+		sprintf(msg, "Delta: %f, Pit: %f, Roll: %f, xAcc: %f, yAcc: %f, zAcc: %f, xAngR: %f, yAngR: %f, zAngR: %f\n",
 						timedelt, state.pitch, state.roll, state.x_acceleration, state.y_acceleration, state.z_acceleration,
 						state.x_angular_rate, state.y_angular_rate, state.z_angular_rate);
 

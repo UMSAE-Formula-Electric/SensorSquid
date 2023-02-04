@@ -7,7 +7,7 @@
  *      		to the SD card, within the context of the operating system.
  *
  *		Notes for use of API: 	-Maximum 2 sequential requests queued for logging per loop of RTOS task
- *								-
+ *								-Always include "\n" at the end of an entry
  *
  *
  */
@@ -52,7 +52,7 @@ typedef struct{
 #define SD_SYNC_TASK_PRIORITY					osPriorityLow			//priority of each task
 
 //RTOS STATIC DEFS
-#define SD_QUEUE_LEN 					6							// length of queue	(queue planned on being a mailbox, 3 is to make sure we dont lose requests)
+#define SD_QUEUE_LEN 					20							// length of queue	(queue planned on being a mailbox, 20 is to make sure we dont lose requests)
 #define SD_QUEUE_SIZE 					sizeof(SD_Request)			// size of a pointer to a string
 #define SD_LOG_MSG_SPACING				4							// size of the newLine string
 #define SD_SYNC_ERROR_CHECK_TIMEOUT		100							// How long to wait to check with error with gatekeeper / min period of sync requests
@@ -192,9 +192,8 @@ static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 	if(f_res != FR_OK){
 		return 0;
 	}
-
+	Time_Stamp(str);
 	f_res = f_write(&fil[fileNum], str, len, &bw);							// Write to SD buffer
-	f_res = f_write(&fil[fileNum], newLine, SD_LOG_MSG_SPACING, &bw);		// write to SD buffer
 
 	f_sync(&fil[fileNum]);
 
@@ -218,6 +217,8 @@ static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 // HOWEVER: Passing -1 will make the task compute the length of your error string. (If you're lazy do that)
 
 // WARNING: Must be called within a RTOS Task
+// WARNING: Entries must have "\n" at the end to maintain formatting
+
 _Bool SD_Log(char * msg, int32_t bytesToWrite){
 
 	BaseType_t ret;			// RTOS function returns
@@ -309,6 +310,18 @@ _Bool SD_Eject(){
 	return 1;
 }
 
+//task that timestamps each entry at the gatekeeper
+void Time_Stamp(char str){
+	RTC_TimeTypeDef timeStruct;
+	char rtcTimeBuff[256];
+
+	HAL_RTC_GetTime(&hrtc, &timeStruct, RTC_FORMAT_BCD);			// Get the time of the recording
+	sprintf(rtcTimeBuff, "Time: (%2d:%2d:%2.7lf) \n", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
+	strcat(str,rtcTimeBuff);
+
+	return 1;
+}
+
 
 //	Reads and Writes to the SD card upon request of other RTOS tasks.
 // 	This Task should have a higher priority within RTOS
@@ -317,7 +330,6 @@ void xSD_Card_Gatekeeper(void* pvParameters){
 
 	static BaseType_t xStatus;					// storage for RTOS function returns
 	static SD_Request sd_req;					// request being sent to SD gatekeeper
-
 
 	f_res = f_mount(&fs, "", 1);		// mount the SD card's default drive immediately
 
@@ -339,11 +351,19 @@ void xSD_Card_Gatekeeper(void* pvParameters){
 			// Queue not empty when entering task!
 			// Error!
 			// Trace which task beat this task's priority?
-			__NOP();
+			//__NOP();
 		}//if
+		if( uxQueueMessagesWaiting(xSD_Card_Queue) == 0 )
+				{
+			vTaskDelay(pdMS_TO_TICKS(10)); //current has a delay when there is no request
 
+					// Queue not empty when entering task!
+					// Error!
+					// Trace which task beat this task's priority?
+					//__NOP();
+				}//if
 		// Wait for new request to be sent to the Queue
-		xStatus = xQueueReceive(xSD_Card_Queue, &sd_req, portMAX_DELAY);	//TODO: Make this timeout and check for errors (We should be constantly logging from BMS)
+		xStatus = xQueueReceive(xSD_Card_Queue, &sd_req, 100);	//TODO: Make this timeout and check for errors (We should be constantly logging from BMS)
 
 		// If data received within time frame (if we decide to have a wait time)
 		if(xStatus == pdTRUE){
@@ -355,6 +375,7 @@ void xSD_Card_Gatekeeper(void* pvParameters){
 					xTaskNotifyGive(xSD_Card_Sync_Handle);
 					break;
 				case Write:
+					//Time_Stamp(sd_req);
 					SD_Task_Write(sd_req.size, sd_req.buff, sd_req.fileName);
 					//Let the SD Sync task know that it can request a sync now during downtime
 					xTaskNotifyGive(xSD_Card_Sync_Handle);
@@ -483,7 +504,7 @@ void xTest_Sender_Task(void * pvParameters){
 
 			sprintf(rtcTimeBuff, "Time: %2d:%2d:%2.7lf	-> ", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
 
-			gotQueued = SD_Log(rtcTimeBuff, -1);
+			//gotQueued = SD_Log(rtcTimeBuff, -1);
 			i++;
 		}
 
@@ -494,6 +515,7 @@ void xTest_Sender_Task(void * pvParameters){
 	//We broke out of the Loop
 
 }
+
 
 //HAL_Falling edge EXT interrupt to detect power loss
 //Finish writing to file

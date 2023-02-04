@@ -21,6 +21,8 @@
 
 // Files that can be accessed
 // Enum of open files
+//Currently set up to log everything to a single file
+//That file can be processed later via a script
 typedef enum{
 	LogFile,
 
