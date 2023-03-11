@@ -65,16 +65,19 @@ void readTemp_task(){
 		for(int i = 0; i < 16; i++) {
 			  voltages[i] = ADC_TO_Voltage * res[i];
 			  temperatures[i] = getTemperature(voltages[i]);
-			  sprintf(msgTemp, "ADC %d %.5f \n", i, voltages[i]);
+			  sprintf(msgTemp, "ADC %d %.5f \n", i, voltages[i]); //always include \n after an entry
 			  strcat(msg,msgTemp);
 		}
-		sprintf(tempMsg, "Temperature: %f\r\n", temperatures[0]);
+		sprintf(tempMsg, "Temperature: %f\r\n", temperatures[0]); //always include \n after an entry
 		HAL_UART_Transmit(&huart1, (uint8_t *) tempMsg, strlen(tempMsg), 10);
 
-		SD_Log(msg, -1);
+		//log temperature
+        xSemaphoreTake(xMutex, portMAX_DELAY);
+		SD_Log(tempMsg, -1); //works best when there is only a single log call per task
+        xSemaphoreGive(xMutex);
 		memset(msg, 0, sizeof msg);
 		memset(msgTemp, 0, sizeof msgTemp);
-		vTaskDelay(pdMS_TO_TICKS(10));
+		vTaskDelay(pdMS_TO_TICKS(10)); //reads every 10ms
 	}
 }
 

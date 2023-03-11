@@ -59,11 +59,6 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "sd_card.h"
-#include "wheel_speed.h"
-#include "timestamps.h"
-#include "IMU_CAN.h"
-#include "thermistor.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -154,16 +149,6 @@ int main(void)
 
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
   HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
-/* USER CODE END 2 */
-  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
-  Init_SD_RTOS_Tasks();
-  Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
-  init_hcan1_rx_task();								// Start Can rx task
-  init_imu_post_task();								// Start Imu Post Task
-  init_readTemp_task();								// Start reading the temperatures from the thermistors
-
-
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
