@@ -175,7 +175,7 @@ float get_wheel_ang_vel(enum wheelPosition wheel) {
 void xWheelSpeed_Logger(void* pvParameters){
 	char logged_msgFR[256] =  {0};
 	char logged_msgFL[256] =  {0};
-	char logged_msgCOMB[512] = {0};
+	char logged_msgCOMB[512] = {63};
 
 	time_delta td;
 	float timedelt;
@@ -197,7 +197,11 @@ void xWheelSpeed_Logger(void* pvParameters){
 		sprintf(logged_msgCOMB, "%s%s",logged_msgFR, logged_msgFL); //ALWAYS make sure final output to queue is a single item
 
 		//Log the left and right wheels
-		SD_Log(logged_msgCOMB,-1);
+		int buffer_length = strlen(logged_msgCOMB);
+        xSemaphoreTake(xMutex, portMAX_DELAY);
+		SD_Log(logged_msgCOMB, buffer_length);
+        xSemaphoreGive(xMutex);
+
 
 		vTaskDelay(pdMS_TO_TICKS(5));	// Log the wheel speeds every 5ms
 	}

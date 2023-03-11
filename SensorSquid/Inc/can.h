@@ -1,20 +1,3 @@
-/*
- * can.h
- *
- *  Created on: Aug. 5, 2022
- *      Author: Brett
- */
-
-#ifndef CAN_H_
-#define CAN_H_
-
-#define imuSlopePGN 		61481
-#define imuAngularRatePGN 	61482
-#define imuAccelerationPGN	61485
-#define imuMagnetometerPGN	65386
-
-#include <stdint.h>
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -24,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,6 +16,11 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __CAN_H__
+#define __CAN_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,10 +33,6 @@ extern "C" {
 /* USER CODE END Includes */
 
 extern CAN_HandleTypeDef hcan1;
-
-void init_hcan1_rx_task();
-void hcan1_rx_readPacketsTask();
-void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
 
 /* USER CODE BEGIN Private defines */
 
@@ -65,3 +49,4 @@ void MX_CAN1_Init(void);
 #endif
 
 #endif /* __CAN_H__ */
+

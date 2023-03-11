@@ -1,55 +1,3 @@
-/*
- * can.c
- *
- *  Created on: Aug. 5, 2022
- *      Author: Brett
- */
-
-#include "can.h"
-#include "stm32f4xx_hal_can.h"
-#include "IMU_CAN.h"
-
-void hcan1_rx_readPacketsTask(){
-	for( ;; ){
-        if(HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0){
-        	uint8_t r_Data[8];
-        	CAN_RxHeaderTypeDef r_Header;
-
-        	//might be FIFO1?
-        	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &r_Header, r_Data);
-
-        	if(r_Header.IDE == CAN_ID_EXT){
-				uint16_t PGN = (r_Header.ExtId >> 8) && 0xFFFF;
-
-				switch(PGN){
-					case imuSlopePGN: //Slope Sensor
-						imuProcessSlopePacket(r_Data);
-						break;
-					case imuAngularRatePGN: //Angular Rate
-						imuProcessAngularRatePacket(r_Data);
-						break;
-					case imuAccelerationPGN: //Acceleration Sensor
-						imuProcessAccelerationPacket(r_Data);
-						break;
-		/*
-					case imuMagnetometerPGN: //Magnetometer Sensor (Dont care?)
-						break;
-		*/
-				}
-			}
-			else if(r_Header.IDE == CAN_ID_STD) {
-				switch(r_Header.IDE){
-					//empty for now
-				}
-			}
-        }
-    }
-}
-
-void init_hcan1_rx_task(){
-  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
-}
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -70,7 +18,7 @@ void init_hcan1_rx_task(){
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
+#include "can.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -164,3 +112,6 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
   }
 }
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */

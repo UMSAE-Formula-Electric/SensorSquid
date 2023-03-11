@@ -72,7 +72,9 @@ void readTemp_task(){
 		HAL_UART_Transmit(&huart1, (uint8_t *) tempMsg, strlen(tempMsg), 10);
 
 		//log temperature
+        xSemaphoreTake(xMutex, portMAX_DELAY);
 		SD_Log(tempMsg, -1); //works best when there is only a single log call per task
+        xSemaphoreGive(xMutex);
 		memset(msg, 0, sizeof msg);
 		memset(msgTemp, 0, sizeof msgTemp);
 		vTaskDelay(pdMS_TO_TICKS(10)); //reads every 10ms

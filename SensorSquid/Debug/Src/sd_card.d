@@ -57,7 +57,9 @@ Src/sd_card.o: ../Src/sd_card.c ../Inc/sd_card.h ../Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
- ../Middlewares/Third_Party/FatFs/src/ff.h ../Inc/sd_diskio.h
+ ../Middlewares/Third_Party/FatFs/src/ff.h ../Inc/sd_diskio.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32F4xx_hal_rtc.h \
+ ../Inc/timestamps.h ../Inc/tim.h
 ../Inc/sd_card.h:
 ../Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -125,3 +127,6 @@ Src/sd_card.o: ../Src/sd_card.c ../Inc/sd_card.h ../Inc/main.h \
 ../Middlewares/Third_Party/FatFs/src/diskio.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../Inc/sd_diskio.h:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32F4xx_hal_rtc.h:
+../Inc/timestamps.h:
+../Inc/tim.h:

@@ -14,7 +14,7 @@
 
 
 #include "sd_card.h"
-
+#include "timestamps.h"
 
 //FATFS
 static FATFS fs;							// 	File System
@@ -24,8 +24,6 @@ static UINT bw;								//	bytes written
 static UINT br;								// 	bytes read
 static FRESULT f_res;						//	function result
 static DIR dir;								// 	current directory
-
-
 
 //	Operation modes of SD card
 typedef enum{
@@ -67,6 +65,8 @@ static const char newLine[] = "\n";	// Space out messages written
 
 
 static RTC_DateTypeDef RTC_DATE;
+SemaphoreHandle_t xMutex;			//Handle for the SD logging Mutex
+
 
 
 //SD_Card Logger Task
@@ -95,6 +95,9 @@ uint8_t xSD_Card_Queue_Storage[SD_QUEUE_LEN * SD_QUEUE_SIZE];	// Storage for the
 //	Initializes the SD card
 // 	Creates the static objects related to the RTOS task's queue.
 void Init_SD_Card(){
+
+	//creates our mutex for resource management
+	xMutex = xSemaphoreCreateMutex();
 
 	// Create a Queue for the SD Card logging RTOS Task before the scheduler starts
 	xSD_Card_Queue = xQueueCreateStatic(SD_QUEUE_LEN,
@@ -138,7 +141,6 @@ void Init_SD_RTOS_Tasks(){
 
 }//init RTOS tasks
 
-
 //Private functions	**********************************************************************
 
 //	Read from the SD card
@@ -181,6 +183,7 @@ static _Bool SD_Task_Read(int32_t btr, char * buff, FileEnum fileNum){
 // FileEnum fileNum (file number)
 static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 
+
 	static uint32_t len;			// length of string
 
 	if(btw == -1)
@@ -192,7 +195,7 @@ static _Bool SD_Task_Write(int32_t btw, char * str, FileEnum fileNum){
 	if(f_res != FR_OK){
 		return 0;
 	}
-	Time_Stamp(str);
+
 	f_res = f_write(&fil[fileNum], str, len, &bw);							// Write to SD buffer
 
 	f_sync(&fil[fileNum]);
@@ -223,7 +226,6 @@ _Bool SD_Log(char * msg, int32_t bytesToWrite){
 
 	BaseType_t ret;			// RTOS function returns
 	SD_Request request;		// Request Struct
-
 	request.type = Write;
 	request.buff = msg;
 	request.fileName = LogFile;
@@ -311,17 +313,29 @@ _Bool SD_Eject(){
 }
 
 //task that timestamps each entry at the gatekeeper
-void Time_Stamp(char str){
+void Time_Stamp(SD_Request req){
 	RTC_TimeTypeDef timeStruct;
 	char rtcTimeBuff[256];
+//	time_delta td = getTime();
+//	float delta = (float)td.seconds + td.subseconds;
+	//sprintf(rtcTimeBuff, "%f\n",delta);
+	// HAL_RTC_GetTime(&hrtc, &timeStruct, RTC_FORMAT_BCD);			// Get the time of the recording
+	// sprintf(rtcTimeBuff, "Time: (%2d:%2d:%2.7lf) \n", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
 
-	HAL_RTC_GetTime(&hrtc, &timeStruct, RTC_FORMAT_BCD);			// Get the time of the recording
-	sprintf(rtcTimeBuff, "Time: (%2d:%2d:%2.7lf) \n", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
-	strcat(str,rtcTimeBuff);
+
+	//##Senuka
+	RTC_TimeTypeDef rtcTimeStruct;
+	RTC_DateTypeDef rtcDateStruct;
+	HAL_RTC_GetTime(&hrtc, &rtcTimeStruct, RTC_FORMAT_BIN);   // Get the RTC time in binary format
+	HAL_RTC_GetDate(&hrtc, &rtcDateStruct, RTC_FORMAT_BIN);   // Get the RTC date in binary format
+	time_t epoch_time = HAL_RTC_GetTimeStamp(&hrtc);   // Get the epoch time directly
+	sprintf(rtcTimeBuff, "Time: %ld -> ", (long)epoch_time);   // Print the epoch time as a long integer
+
+
+	strcat(req.buff,rtcTimeBuff);
 
 	return 1;
 }
-
 
 //	Reads and Writes to the SD card upon request of other RTOS tasks.
 // 	This Task should have a higher priority within RTOS
@@ -500,9 +514,18 @@ void xTest_Sender_Task(void * pvParameters){
 		}
 		else{
 
-			HAL_RTC_GetTime(&hrtc, &timeStruct, RTC_FORMAT_BCD);			// Get the time of the recording
+			// HAL_RTC_GetTime(&hrtc, &timeStruct, RTC_FORMAT_BCD);			// Get the time of the recording
 
-			sprintf(rtcTimeBuff, "Time: %2d:%2d:%2.7lf	-> ", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
+			// sprintf(rtcTimeBuff, "Time: %2d:%2d:%2.7lf	-> ", timeStruct.Hours, timeStruct.Minutes, timeStruct.Seconds+(double)1/timeStruct.SubSeconds);
+
+			//##Senuka
+			RTC_TimeTypeDef rtcTimeStruct;
+			RTC_DateTypeDef rtcDateStruct;
+			HAL_RTC_GetTime(&hrtc, &rtcTimeStruct, RTC_FORMAT_BIN);   // Get the RTC time in binary format
+			HAL_RTC_GetDate(&hrtc, &rtcDateStruct, RTC_FORMAT_BIN);   // Get the RTC date in binary format
+			time_t epoch_time = HAL_RTC_GetTimeStamp(&hrtc);   // Get the epoch time directly
+			sprintf(rtcTimeBuff, "Time: %ld -> ", (long)epoch_time);   // Print the epoch time as a long integer
+
 
 			//gotQueued = SD_Log(rtcTimeBuff, -1);
 			i++;
