@@ -11,8 +11,6 @@
 #define THERMISTOR_H_
 
 
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
-void init_readTemp_task();
+void StartReadTempTask(void const * argument);
 
 #endif /* THERMISTOR_H_ */

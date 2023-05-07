@@ -1,5 +1,5 @@
-../Src/freertos.c:169:6:StartDefaultTask	8	static
-../Src/freertos.c:101:13:configureTimerForRunTimeStats	0	static
-../Src/freertos.c:106:22:getRunTimeCounterValue	0	static
-../Src/freertos.c:116:6:vApplicationGetIdleTaskMemory	0	static
-../Src/freertos.c:130:6:MX_FREERTOS_Init	40	static
+../Src/freertos.c:183:6:StartDefaultTask	8	static
+../Src/freertos.c:105:13:configureTimerForRunTimeStats	0	static
+../Src/freertos.c:110:22:getRunTimeCounterValue	0	static
+../Src/freertos.c:120:6:vApplicationGetIdleTaskMemory	0	static
+../Src/freertos.c:134:6:MX_FREERTOS_Init	104	static
