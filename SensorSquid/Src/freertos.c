@@ -57,6 +57,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "thermistor.h"
+#include "can.h"
 
 /* USER CODE END Includes */
 
@@ -78,6 +79,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 osThreadId readTempTaskHandle;
+osThreadId canTaskHandle;
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -162,6 +164,8 @@ void MX_FREERTOS_Init(void) {
   //imu
 
   //can
+  osThreadDef(canTask, StartCanTask, osPriorityNormal, 0, 128);
+  canTaskHandle = osThreadCreate(osThread(canTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

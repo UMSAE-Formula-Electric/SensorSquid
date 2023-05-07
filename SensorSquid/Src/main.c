@@ -128,6 +128,9 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+
+  /* USER CODE BEGIN 2 */
+  /* USER INIT BEGIN */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -140,7 +143,8 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  /* USER CODE BEGIN 2 */
+  /* USER INIT END */
+  /* HAL TIM START */
   Init_SD_Card();
   HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_Base_Start_IT(&htim2);
@@ -150,6 +154,7 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
   HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
   HAL_CAN_MspInit(&hcan1);
+  /* HAL TIM END */
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
