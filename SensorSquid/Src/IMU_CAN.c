@@ -17,6 +17,7 @@
 #include "sd_card.h"
 #include "timestamps.h"
 
+static TaskHandle_t	imuPost_taskHandle;
 
 struct imuState state;
 
