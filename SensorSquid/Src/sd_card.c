@@ -6,7 +6,7 @@
  *      Desc: 	RTOS tasks and functions related to operating logging, reading and writing
  *      		to the SD card, within the context of the operating system.
  *
- *		Notes for use of API: 	-Maximum 2 sequential requests queued for logging per loop of RTOS task
+ *		Notes for use of API: 	- Maximum 2 sequential requests queued for logging per loop of RTOS task
  *								-
  *
  *

@@ -15,6 +15,7 @@ void imuPostStateTask();
 void imuProcessSlopePacket(uint8_t data[]);
 void imuProcessAngularRatePacket(uint8_t data[]);
 void imuProcessAccelerationPacket(uint8_t data[]);
+void HAL_GPIO_EXIT_Callback(uint16_t GPIO_Pin);
 
 struct imuState{
 	float x_acceleration;
@@ -23,11 +24,17 @@ struct imuState{
 
 	float z_acceleration;
 
-	float x_angular_rate;
+	float pitch_rate_angular_rate;
 
-	float y_angular_rate;
+	float roll_rate_angular_rate;
 
-	float z_angular_rate;
+	float yaw_rate_angular_rate;
+
+	float x_mag;
+
+	float y_mag;
+
+	float z_mag;
 
 	float pitch; /*!< Specifies pitch in degrees with high resolution. Can be between -250 and +252 */
 

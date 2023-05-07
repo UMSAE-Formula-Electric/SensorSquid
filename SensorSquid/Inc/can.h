@@ -1,19 +1,5 @@
-/*
- * can.h
- *
- *  Created on: Aug. 5, 2022
- *      Author: Brett
- */
-
 #ifndef CAN_H_
 #define CAN_H_
-
-#define imuSlopePGN 		61481
-#define imuAngularRatePGN 	61482
-#define imuAccelerationPGN	61485
-#define imuMagnetometerPGN	65386
-
-#include <stdint.h>
 
 /* USER CODE BEGIN Header */
 /**
@@ -41,23 +27,25 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include <stdint.h>
 /* USER CODE END Includes */
 
+/* USER CODE BEGIN Private defines */
 extern CAN_HandleTypeDef hcan1;
+#define imuSlopePGN 		61481
+#define imuAngularRatePGN 	0x4f0
+#define imuAccelerationPGN	0x0f0
+#define imuMagnetometerPGN	65386
+/* USER CODE END Private defines */
 
+/* USER CODE BEGIN Prototypes */
 void init_hcan1_rx_task();
 void hcan1_rx_readPacketsTask();
 void decodeCanPacket(CAN_RxHeaderTypeDef *pHeader, uint8_t aData[]);
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 void MX_CAN1_Init(void);
-
-/* USER CODE BEGIN Prototypes */
-
+void HAL_CAN_MspInit(CAN_HandleTypeDef* hcan1);
+void HAL_CAN_MspDeInit(CAN_HandleTypeDef* hcan1);
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

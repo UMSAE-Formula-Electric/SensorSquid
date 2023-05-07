@@ -1,55 +1,3 @@
-/*
- * can.c
- *
- *  Created on: Aug. 5, 2022
- *      Author: Brett
- */
-
-#include "can.h"
-#include "stm32f4xx_hal_can.h"
-#include "IMU_CAN.h"
-
-void hcan1_rx_readPacketsTask(){
-	for( ;; ){
-        if(HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0){
-        	uint8_t r_Data[8];
-        	CAN_RxHeaderTypeDef r_Header;
-
-        	//might be FIFO1?
-        	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &r_Header, r_Data);
-
-        	if(r_Header.IDE == CAN_ID_EXT){
-				uint16_t PGN = (r_Header.ExtId >> 8) && 0xFFFF;
-
-				switch(PGN){
-					case imuSlopePGN: //Slope Sensor
-						imuProcessSlopePacket(r_Data);
-						break;
-					case imuAngularRatePGN: //Angular Rate
-						imuProcessAngularRatePacket(r_Data);
-						break;
-					case imuAccelerationPGN: //Acceleration Sensor
-						imuProcessAccelerationPacket(r_Data);
-						break;
-		/*
-					case imuMagnetometerPGN: //Magnetometer Sensor (Dont care?)
-						break;
-		*/
-				}
-			}
-			else if(r_Header.IDE == CAN_ID_STD) {
-				switch(r_Header.IDE){
-					//empty for now
-				}
-			}
-        }
-    }
-}
-
-void init_hcan1_rx_task(){
-  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
-}
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -71,6 +19,56 @@ void init_hcan1_rx_task(){
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 
+#include "can.h"
+#include "stm32f4xx_hal_can.h"
+#include "IMU_CAN.h"
+
+#define CAN_RX_FIFO CAN_RX_FIFO0
+
+CAN_TxHeaderTypeDef   TxHeader;
+uint8_t               TxData[8];
+uint32_t              TxMailbox;
+uint8_t 			  RxData[8];
+CAN_RxHeaderTypeDef   RxHeader;
+CAN_FilterTypeDef 	  canfilterconfig;
+
+void hcan1_rx_readPacketsTask(){
+	for( ;; ){
+		if(HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) != 1)
+		{
+		/* Reception Missing */
+		Error_Handler();
+		}
+//		if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+//		{
+//		  Error_Handler();
+//		}
+    	if (HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO, &RxHeader, RxData) != HAL_OK)
+		{
+		  Error_Handler();
+		}
+		uint32_t PGN = (RxHeader.ExtId >> 8) && 0xFFFF;
+
+		switch(RxHeader.StdId){
+			case imuSlopePGN: //Slope Sensor
+				//imuProcessSlopePacket(RxData);
+				printf("dumbass");
+				break;
+			case imuAngularRatePGN: //Angular Rate
+				//imuProcessAngularRatePacket(RxData);
+				printf("dumbass");
+				break;
+			case imuAccelerationPGN: //Acceleration Sensor
+				//imuProcessAccelerationPacket(RxData);
+				printf("dumbass");
+				break;
+		}
+    }
+}
+
+void init_hcan1_rx_task(){
+  xTaskCreate(&hcan1_rx_readPacketsTask, "hcan1_rxTask", 200, ( void * ) 1, 3, NULL);
+}
 
 /* USER CODE BEGIN 0 */
 
@@ -90,23 +88,53 @@ void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 16;
+  hcan1.Init.Prescaler = 6;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_4TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
   {
-    Error_Handler();
+	Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
+  /* Filter Configuration
+   * In order to reduce CPU Load to filter out messages,
+   * the STM32 have the Filters built inside the CAN peripheral.
+   */
+  canfilterconfig.FilterActivation = ENABLE;
+  canfilterconfig.FilterBank = 0;  // which filter bank to use from the assigned ones
+  canfilterconfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+  canfilterconfig.FilterIdHigh = 0;
+  canfilterconfig.FilterIdLow = 0;
+  canfilterconfig.FilterMaskIdHigh = 0;
+  canfilterconfig.FilterMaskIdLow = 0x0000;
+  canfilterconfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  canfilterconfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  canfilterconfig.SlaveStartFilterBank = 14;  // how many filters to assign to the CAN1 (master can)
 
+  if(HAL_CAN_ConfigFilter(&hcan1, &canfilterconfig) != HAL_OK)
+  {
+    /* Filter configuration Error */
+    Error_Handler();
+  }
+  if (HAL_CAN_Start(&hcan1) != HAL_OK)
+  {
+    /* Start Error */
+    Error_Handler();
+  }
+  /*##-4- Activate CAN RX notification #######################################*/
+  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+  {
+    /* Notification Error */
+    Error_Handler();
+  }
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -163,4 +191,21 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
   /* USER CODE END CAN1_MspDeInit 1 */
   }
 }
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+  /* Get RX message */
+  if (HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+  {
+    /* Reception Error */
+    Error_Handler();
+  }
+
+  /* Display LEDx */
+  if ((RxHeader.StdId == imuAngularRatePGN))
+  {
+	  printf("disp");
+  }
+}
+
 

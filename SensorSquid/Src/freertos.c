@@ -56,6 +56,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "thermistor.h"
 
 /* USER CODE END Includes */
 
@@ -76,6 +77,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+osThreadId readTempTaskHandle;
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -152,6 +154,14 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of readTempTask */
+  osThreadDef(readTempTask, StartReadTempTask, osPriorityNormal, 0, 128);
+  readTempTaskHandle = osThreadCreate(osThread(readTempTask), NULL);
+
+  //imu
+
+  //can
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
