@@ -8,13 +8,6 @@
 
 uint32_t res[16];
 
-//TO-DO: Filter Noise
-//use low pass filter at adc input,
-//increase adc sampling time,
-//isolate analog tracks on PCB from noisy signals,
-//calibrate adc at startup,
-//use digital filtering (DSP)
-
 // STEINHART & HART Equation Coefficients
 const double A = 1.2794639360 * pow(10, -3);
 const double B = 2.6408831422 * pow(10, -4);
@@ -46,13 +39,14 @@ double getTemperature(double voltageReading){		// USING STEINHART & HART EQUATIO
 	return temperature;
 }
 
+
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	newData = 1;
 	newData_dist = 1;
 }
 
-void readTemp_task(){
+void StartReadTempTask(void const * argument){
 	char msg[512];
 	char msgTemp[20];
 	float voltages[16];
@@ -78,8 +72,4 @@ void readTemp_task(){
 		memset(msgTemp, 0, sizeof msgTemp);
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
-}
-
-void init_readTemp_task(){
-	xTaskCreate(&readTemp_task, "readTemp_task", 512, ( void * ) 1, 3, NULL);
 }

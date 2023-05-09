@@ -59,6 +59,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+
 #include "sd_card.h"
 #include "wheel_speed.h"
 #include "timestamps.h"
@@ -134,6 +135,9 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+
+  /* USER CODE BEGIN 2 */
+  /* USER INIT BEGIN */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -146,7 +150,8 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  /* USER CODE BEGIN 2 */
+  /* USER INIT END */
+  /* HAL TIM START */
   Init_SD_Card();
   HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_Base_Start_IT(&htim2);
@@ -155,6 +160,7 @@ int main(void)
 
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); 		// Start input capture
   HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1); 		// Start input capture
+
 /* USER CODE END 2 */
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
@@ -165,6 +171,10 @@ int main(void)
   init_readTemp_task();								// Start reading the temperatures from the thermistors
   init_readDist_task();								// Start reading the distances from the shock potentiometers
 
+
+
+  HAL_CAN_MspInit(&hcan1);
+  /* HAL TIM END */
 
   /* USER CODE END 2 */
 
@@ -271,6 +281,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if(htim->Instance == TIM3)
 	  HAL_FL_Wheelspeed_Overflow_Callback();		// update the wheelspeed overfow when that happens
+
+  if(htim->Instance == TIM4)
+	  HAL_Flow_Meter_Callback();					// update flow meter
+
 
 
   /* USER CODE END Callback 1 */
