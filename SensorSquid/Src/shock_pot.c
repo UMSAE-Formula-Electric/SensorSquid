@@ -1,6 +1,6 @@
 //********************************************************************
 //
-//	@file 		flowmeter.c
+//	@file 		shock_pot.c
 //	@author 	Matthew Mora
 //	@created	Nov 19, 2022
 //	@brief		Calculates flowrate from flowmeters
@@ -22,9 +22,19 @@ extern const double ADC_TO_Voltage;
 extern const float vDD;
 
 const float MAX_DIST = 50;	// max travel of shock potentiometer in mm
-volatile int newData_dist;	//
-volatile double dist[16];	// holds
+volatile int newData_dist;	// flag to determine if the ADC has finished a read
+volatile double dist[16];	// holds distances read from each ADC input (note: not all inputs are necessarily connected to a shock pot
 
+//*********************************************************************
+// getDistance
+//
+// PURPOSE: This function translates voltages to distance in millimeters (mm)
+//
+// INPUT PARAMTERS:
+//			voltage - voltage measured across the shock pot
+//
+// RETURN:	distance in mm of type double
+//*********************************************************************
 double getDistance(double voltage){
 	double dist = MAX_DIST * voltage / vDD;
 	return dist;
@@ -50,7 +60,12 @@ double getDistance(double voltage){
 //	}
 //}
 
-// gets shock pot distances
+//*********************************************************************
+// readDist_task
+//
+// PURPOSE: Main loop for freeRTOS thread. Waits for ADC conversion and
+//			translates voltages into distance
+//*********************************************************************
 void readDist_task(){
 	char msg[512];
 	char msgDist[20];
@@ -85,7 +100,12 @@ void readDist_task(){
 	}
 }
 
-// create FreeRTOS task for reading distances
+//*********************************************************************
+// init_readDist_task
+//
+// PURPOSE: Initializes and starts the freeRTOS task which handles
+//			shock pot reading
+//*********************************************************************
 void init_readDist_task(){
 	xTaskCreate(&readDist_task, "readDist_task", 512, ( void * ) 1, 3, NULL);
 }
