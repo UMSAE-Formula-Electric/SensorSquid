@@ -1,6 +1,0 @@
-../Src/can.c:40:6:MX_CAN1_Init	48	static
-../Src/can.c:102:6:HAL_CAN_MspInit	40	static
-../Src/can.c:133:6:HAL_CAN_MspDeInit	8	static
-../Src/can.c:162:19:CAN_Polling	8	static
-../Src/can.c:313:6:print_USART_float	32	static
-../Src/can.c:266:6:StartCanTask	48	static
