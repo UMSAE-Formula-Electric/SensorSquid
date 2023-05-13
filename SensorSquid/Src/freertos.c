@@ -167,6 +167,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(canTask, StartCanTask, osPriorityNormal, 0, 128);
   canTaskHandle = osThreadCreate(osThread(canTask), NULL);
 
+  // shock pots
+
+  // flow meters
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
