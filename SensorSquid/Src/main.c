@@ -157,17 +157,17 @@ int main(void)
 /* USER CODE END 2 */
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
-  Init_SD_RTOS_Tasks();
-  Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
-  init_hcan1_rx_task();								// Start Can rx task
-  init_imu_post_task();								// Start Imu Post Task
+//  Init_SD_RTOS_Tasks();
+//  Init_WheelSpeed_Logging_Task();					// Start the wheelspeed logging task
+//  init_hcan1_rx_task();								// Start Can rx task
+//  init_imu_post_task();								// Start Imu Post Task
   init_readTemp_task();								// Start reading the temperatures from the thermistors
 
 
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
+//  MX_FREERTOS_Init();
 
   /* Start scheduler */
   osKernelStart();

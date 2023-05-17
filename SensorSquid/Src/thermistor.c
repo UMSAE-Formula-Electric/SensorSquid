@@ -68,7 +68,7 @@ void readTemp_task(){
 			  sprintf(msgTemp, "ADC %d %.5f \n", i, voltages[i]);
 			  strcat(msg,msgTemp);
 		}
-		sprintf(tempMsg, "Temperature: %f\r\n", temperatures[0]);
+		sprintf(tempMsg, "Temperature: %f\r\n", temperatures[1]);
 		HAL_UART_Transmit(&huart1, (uint8_t *) tempMsg, strlen(tempMsg), 10);
 
 		SD_Log(msg, -1);
